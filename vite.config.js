@@ -10,6 +10,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api/payment': 'http://localhost:1769',
+      '/api/lms/payment': 'http://localhost:1769',
     },
   },
 })

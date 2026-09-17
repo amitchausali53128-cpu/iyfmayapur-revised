@@ -194,12 +194,15 @@ export default function ViewCourse() {
 
       const userId = jwtDecode(token).id;
       const student = await getStudentById(userId);
+      const nameParts = String(student?.name || '').trim().split(/\s+/).filter(Boolean);
+      const firstName = student?.first_name || nameParts.shift() || 'Student';
+      const lastName = student?.last_name || nameParts.join(' ') || firstName;
       const paymentPayload = {
         amount: Number((amount / 100).toFixed(2)),
         email: student?.email || '',
-        mobile: student?.mobile || '',
-        first_name: student?.first_name || '',
-        last_name: student?.last_name || '',
+        mobile: student?.mobile || student?.phone || '0000000000',
+        first_name: firstName,
+        last_name: lastName,
         address_1: student?.address_1 || 'Online purchase',
         pin_code: student?.pin_code || '000000',
         district: student?.district || 'Online',
