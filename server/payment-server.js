@@ -56,8 +56,21 @@ function decryptPayload(value) {
 }
 
 function paymentSucceeded(payload) {
-  const status = [payload.status, payload.payment_status, payload.response, payload.message, payload.Response_Message].filter(Boolean).join(" ").toLowerCase();
-  return payload.Response_Code === "E000" || /success|successful|completed|captured|approved/.test(status);
+  const responseCode = payload.Response_Code || payload.response_code || payload.ResponseCode || payload.responseCode;
+  const status = [
+    payload.status,
+    payload.Status,
+    payload.payment_status,
+    payload.paymentStatus,
+    payload.transaction_status,
+    payload.Transaction_Status,
+    payload.response,
+    payload.message,
+    payload.Response_Message,
+  ].filter(Boolean).join(" ").toLowerCase();
+  if (/not\s+successful|fail(?:ed|ure)?|declin(?:ed|e)|reject(?:ed|ion)|cancel(?:led|ed)?/.test(status)) return false;
+  return String(responseCode).toUpperCase() === "E000"
+    || /(^|\s)(success|successful|completed|captured|approved)(\s|$)/.test(status);
 }
 
 function escapePdfText(value) {

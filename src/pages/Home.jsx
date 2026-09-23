@@ -1,4 +1,4 @@
- import { createElement, useEffect, useState } from "react";
+import { createElement, useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 import {
   FiArrowUpRight,
@@ -220,54 +220,93 @@ export default function Home() {
         <div><FiUsers aria-hidden="true" /><span>A welcoming community</span></div>
       </motion.div>
 
-      <div>
-        <motion.section
-          className="home-intro home-shell"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="home-intro__content">
-            <button
-              type="button"
-              className="home-section-title home-section-title--button"
-              onClick={() => setIsOpen((open) => !open)}
-              aria-expanded={isOpen}
-              aria-controls="who-we-are-copy"
-            >
-              <span>WHO WE ARE</span>
-              <span className="home-title-rule" />
-              <FiChevronDown
-                className={isOpen ? "is-open" : ""}
-                aria-hidden="true"
-              />
-            </button>
+      {/* Uncompressed, Full-Width Section Wrapper */}
+      <div className="w-full">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.section
+            className="relative overflow-hidden py-16 md:py-24"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            {/* Background Energetic Glow */}
+            <div 
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-tr from-amber-500/20 via-orange-500/15 to-purple-500/10 rounded-full blur-3xl pointer-events-none" 
+              aria-hidden="true" 
+            />
 
-            <div
-              id="who-we-are-copy"
-              className={`home-intro__reveal ${isOpen ? "is-open" : ""}`}
-            >
-              <div>
-                <p>
-                  The ISKCON Youth Forum (IYF) is a global initiative focused on
-                  engaging and empowering young people through spiritual and
-                  personal development.
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center relative z-10">
+              
+              {/* Left Column: High-Energy Content Block */}
+              <div className="lg:col-span-6 flex flex-col justify-center space-y-6">
+                
+                {/* Badge / Subtitle */}
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-600 dark:text-orange-400 text-xs font-semibold tracking-wider uppercase w-fit">
+                  <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                  Who We Are
+                </div>
+
+                {/* Main Catchy Heading */}
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight">
+                  Ignite Your Spirit, <br />
+                  <span className="bg-gradient-to-r from-orange-600 via-amber-500 to-yellow-500 bg-clip-text text-transparent">
+                    Empower Your Future.
+                  </span>
+                </h2>
+
+                {/* Engaging Description */}
+                <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                  The ISKCON Youth Forum (IYF) is a vibrant global movement designed to help young minds discover inner strength, authentic connection, and profound personal growth through timeless wisdom.
                 </p>
-                <Link to="/sp" className="home-text-link">
-                  Our inspiration <FiArrowUpRight aria-hidden="true" />
-                </Link>
-              </div>
-            </div>
-          </div>
 
-          <div className="home-intro__visual">
-            <div className="home-intro__sun" aria-hidden="true" />
-            <div className="home-intro__frame">
-              <img src={cloudinaryAsset("/home.jpg", { width: 1200, crop: "limit" })} alt="Who we are at IYF Mayapur" loading="lazy" decoding="async" />
+                {/* Action Link / Button */}
+                <div className="pt-2">
+                  <Link 
+                    to="/sp" 
+                    className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-gray-900 hover:bg-orange-600 text-white font-medium shadow-lg hover:shadow-orange-500/25 transition-all duration-300 group"
+                  >
+                    <span>Our Inspiration</span>
+                    <FiArrowUpRight className="text-lg group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" aria-hidden="true" />
+                  </Link>
+                </div>
+
+              </div>
+
+              {/* Right Column: Dynamic Visual & Image Presentation */}
+              <div className="lg:col-span-6 relative w-full">
+                <div className="home-intro__sun absolute -top-6 -right-6 w-32 h-32 bg-amber-400/20 rounded-full blur-2xl" aria-hidden="true" />
+                
+                {/* Modern Framed Image with Hover Effect */}
+                <div className="relative group rounded-3xl overflow-hidden shadow-2xl border border-gray-200/50 dark:border-gray-800 bg-gray-100 dark:bg-gray-900 w-full">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60 z-10 pointer-events-none" />
+                  
+                  <img 
+                    src={cloudinaryAsset("/youth.jpg", { width: 1200, crop: "limit" })} 
+                    alt="Who we are at IYF Mayapur" 
+                    loading="lazy" 
+                    decoding="async"
+                    className="w-full h-[380px] sm:h-[440px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
+                  />
+
+                  {/* Floating Glassmorphism Tag */}
+                  <div className="absolute bottom-4 left-4 right-4 z-20 backdrop-blur-md bg-white/10 dark:bg-black/30 border border-white/20 p-4 rounded-2xl flex items-center justify-between text-white">
+                    <div>
+                      <p className="text-xs font-semibold tracking-wider uppercase text-orange-400">Global Movement</p>
+                      <p className="text-sm font-medium">Join thousands of vibrant youth</p>
+                    </div>
+                    <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                      ✨
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
             </div>
-          </div>
-        </motion.section>
+          </motion.section>
+        </div>
+      </div>
 
         <motion.section
           className="home-pathways home-shell"
@@ -375,7 +414,6 @@ export default function Home() {
             </Link>
           </div>
         </motion.section>
-      </div>
     </div>
   );
 }

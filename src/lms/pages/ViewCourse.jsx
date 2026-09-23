@@ -106,7 +106,7 @@ export default function ViewCourse() {
     if (paymentError) {
       setCheckoutLoading(false);
       alert('Payment could not be completed. Please try again.');
-      window.history.replaceState({}, '', `/course/${courseId}`);
+      window.history.replaceState({}, '', `/lms/course/${courseId}`);
       return;
     }
 
@@ -117,13 +117,13 @@ export default function ViewCourse() {
 
         if (payment?.status === 'success' && (!payment.course_id || String(payment.course_id) === String(courseId))) {
           await enrollInCourse(courseId);
-          window.history.replaceState({}, '', `/course/${courseId}`);
-          navigate(`/player/${courseId}`);
+          window.history.replaceState({}, '', `/lms/course/${courseId}`);
+          navigate(`/lms/player/${courseId}`);
           return;
         }
 
         alert('Payment was not completed successfully. Please try again.');
-        window.history.replaceState({}, '', `/course/${courseId}`);
+        window.history.replaceState({}, '', `/lms/course/${courseId}`);
       } catch (err) {
         console.error('Payment status check failed:', err);
         alert('Payment status could not be verified. Please contact support.');
