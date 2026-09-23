@@ -1,4 +1,4 @@
-import { CourseCard } from '../components/Card';
+import { CourseCard } from '../assets/components/Card';
 import { cloudinaryAsset } from '../lib/cloudinary';
 import enrolledCourses from '../data/enrolledCourses';
 

@@ -1,6 +1,6 @@
 import { IoMdTv } from "react-icons/io"
 import { Link } from "react-router-dom"
-import { cloudinaryAsset } from "../lib/cloudinary"
+import { cloudinaryAsset } from "../../lib/cloudinary"
 
 export function CourseCard({ title, imageUrl, courseId, price }) { 
 

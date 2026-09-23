@@ -1,13 +1,14 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Routes, Route, useLocation, Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import Navbar from './components/Navbar.jsx'
-import Footer from './components/Footer.jsx'
-import PageTransition from './components/PageTransition.jsx'
+import Navbar from './assets/components/Navbar.jsx'
+import Footer from './assets/components/Footer.jsx'
+import PageTransition from './assets/components/PageTransition.jsx'
 import { getEventBySlug } from './data/events.js'
 
 const Home = lazy(() => import('./pages/Home.jsx'))
 const Prabhupada = lazy(() => import('./pages/Prabhupada/Prabhupada.jsx'))
+const AboutUs = lazy(() => import('./pages/AboutUs/About.jsx'))
 const StudentCourses = lazy(() => import('./pages/StudentCourses.jsx'))
 const Player = lazy(() => import('./pages/Player.jsx'))
 const ViewCourse = lazy(() => import('./pages/ViewCourse.jsx'))
@@ -60,6 +61,7 @@ function App() {
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<PageTransition><Home /></PageTransition>} />
               <Route path="/prabhupada" element={<PageTransition><Prabhupada /></PageTransition>} />
+              <Route path="/aboutUs" element={<PageTransition><AboutUs /></PageTransition>} />
               <Route path="/events" element={<PageTransition><Events /></PageTransition>} />
               <Route path="/events/:eventSlug" element={<PageTransition><EventDetails /></PageTransition>} />
               <Route path="/seva" element={<PageTransition><Seva /></PageTransition>} />

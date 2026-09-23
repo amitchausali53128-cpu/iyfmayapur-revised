@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useTypewriter } from "../components/Typewriter";
+import { useTypewriter } from "../assets/components/Typewriter";
 import { cloudinaryAsset } from "../lib/cloudinary";
 
 export default function Sp() {

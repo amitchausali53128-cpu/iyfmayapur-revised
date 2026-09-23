@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap');
+
+
 .camp-banner {
   border-color: #e7c77f;
   background: #f7d77f;

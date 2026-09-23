@@ -13,7 +13,7 @@ import {
 import Masonry from "react-masonry-css";
 import { Link } from "react-router-dom";
 import Prabhupada from "../assets/January_20.jpg";
-import AnimatedCard from '../components/AnimatedCard.jsx';
+import AnimatedCard from '../assets/components/AnimatedCard.jsx';
 import { cloudinaryAsset } from "../lib/cloudinary";
 
 const lifeImages = [

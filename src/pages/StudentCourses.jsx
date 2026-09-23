@@ -1,11 +1,11 @@
-import { CourseCard } from "../components/Card"
-import AnimatedCard from '../components/AnimatedCard.jsx'
+import { CourseCard } from "../assets/components/Card"
+import AnimatedCard from '../assets/components/AnimatedCard.jsx'
 import bgimage from '../assets/sample.jpg'
 import gita from '../assets/gita.png'
 import mantra from '../assets/mantra.jpeg'
 import kirtan from '../assets/kirtan.jpg'
 import { Link } from "react-router-dom"
-import SidebarLMS from "../components/SidebarLMS"
+import SidebarLMS from "../assets/components/SidebarLMS"
 
 export default function StudentCourses() {
 
