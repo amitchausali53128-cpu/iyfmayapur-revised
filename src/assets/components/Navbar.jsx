@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { events } from '../data/events.js';
+import { events } from '../../data/events.js';
 
 const MENU_ITEMS = [
   { name: "Home", path: "/" },
@@ -9,6 +9,7 @@ const MENU_ITEMS = [
   { name: "Gallery", path: "/gallery" },
   { name: "Store", path: "/store" },
   { name: "Donation", path: "/donation" },
+  { name: "AboutUs", path: "/aboutUs" },
   { name: "Srila Prabhupada", path: "/prabhupada" },
 ];
 
@@ -54,13 +55,11 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`site-navbar fixed left-0 top-0 w-full h-16 z-40 px-4 sm:px-8 flex items-center justify-between transition-all duration-300 ${
-        isVisible || menuOpen ? 'translate-y-0' : '-translate-y-full'
-      } ${
-        isScrolled
+      className={`site-navbar fixed left-0 top-0 w-full h-16 z-40 px-4 sm:px-8 flex items-center justify-between transition-all duration-300 ${isVisible || menuOpen ? 'translate-y-0' : '-translate-y-full'
+        } ${isScrolled
           ? "bg-white/20 backdrop-blur-md shadow-sm "
           : "bg-transparent"
-      }`}
+        }`}
     >
       {/* Brand / Logo */}
       <NavLink to="/" className="flex items-center gap-3 py-4">
@@ -84,10 +83,9 @@ export default function Navbar() {
             <NavLink
               to={item.path}
               className={({ isActive }) =>
-                `relative py-4 text-base font-medium transition-colors duration-200 block ${
-                  isActive
-                    ? "text-[#1f5d42] font-semibold"
-                    : "text-gray-800 hover:text-[#1f5d42]"
+                `relative py-4 text-sm font-medium transition-colors duration-200 block ${isActive
+                  ? "text-[#1f5d42] font-semibold"
+                  : "text-gray-800 hover:text-[#1f5d42]"
                 }`
               }
             >
@@ -150,30 +148,26 @@ export default function Navbar() {
         )}
         <div className="w-6 h-5 flex flex-col justify-between">
           <span
-            className={`h-0.5 w-full bg-current rounded transition-transform duration-300 ${
-              menuOpen ? "rotate-45 translate-y-2" : ""
-            }`}
+            className={`h-0.5 w-full bg-current rounded transition-transform duration-300 ${menuOpen ? "rotate-45 translate-y-2" : ""
+              }`}
           />
           <span
-            className={`h-0.5 w-full bg-current rounded transition-opacity duration-300 ${
-              menuOpen ? "opacity-0" : ""
-            }`}
+            className={`h-0.5 w-full bg-current rounded transition-opacity duration-300 ${menuOpen ? "opacity-0" : ""
+              }`}
           />
           <span
-            className={`h-0.5 w-full bg-current rounded transition-transform duration-300 ${
-              menuOpen ? "-rotate-45 -translate-y-2" : ""
-            }`}
+            className={`h-0.5 w-full bg-current rounded transition-transform duration-300 ${menuOpen ? "-rotate-45 -translate-y-2" : ""
+              }`}
           />
         </div>
       </button>
 
       {/* Mobile Dropdown Menu */}
       <div
-        className={`site-mobile-menu sm:hidden fixed inset-x-0 top-16 bg-white/95 backdrop-blur-xl border-b border-gray-200 shadow-xl transition-all duration-300 ease-in-out ${
-          menuOpen
+        className={`site-mobile-menu sm:hidden fixed inset-x-0 top-16 bg-white/95 backdrop-blur-xl border-b border-gray-200 shadow-xl transition-all duration-300 ease-in-out ${menuOpen
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 -translate-y-4 pointer-events-none"
-        }`}
+          }`}
       >
         <div className="flex max-h-[calc(100vh-4rem)] flex-col overflow-y-auto px-6 py-6">
           {/* Navigation Links */}
@@ -184,10 +178,9 @@ export default function Navbar() {
                   to={item.path}
                   onClick={() => setMenuOpen(false)}
                   className={({ isActive }) =>
-                    `flex items-center justify-between px-4 py-3 rounded-lg text-base font-medium transition-colors ${
-                      isActive
-                        ? "bg-[#1f5d42]/10 text-[#1f5d42] font-semibold"
-                        : "text-gray-700 hover:bg-gray-100 hover:text-[#1f5d42]"
+                    `flex items-center justify-between px-4 py-3 rounded-lg text-base font-medium transition-colors ${isActive
+                      ? "bg-[#1f5d42]/10 text-[#1f5d42] font-semibold"
+                      : "text-gray-700 hover:bg-gray-100 hover:text-[#1f5d42]"
                     }`
                   }
                 >
