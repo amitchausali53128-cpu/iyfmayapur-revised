@@ -483,11 +483,11 @@
 
 .home-quote-wrap {
   padding-block: clamp(70px, 8vw, 110px);
-  color: #fff7e6;
+  color: #bbb803;
   background:
     radial-gradient(circle at 15% 10%, rgba(220, 164, 63, 0.2), transparent 26rem),
     radial-gradient(circle at 88% 80%, rgba(220, 164, 63, 0.12), transparent 24rem),
-    #332219;
+    #063850;
 }
 
 .home-quote {

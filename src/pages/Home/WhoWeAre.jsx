@@ -126,6 +126,8 @@ const WhoWeAre = () => {
                   scale: 0.97,
                 }}
                 className="mt-7 inline-flex items-center gap-3 rounded-full bg-[#08745e] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#08745e]/20"
+
+                onClick={() => {window.location.href = "/aboutUs"}}
               >
                 Know More About Us
 
@@ -325,25 +327,7 @@ const WhoWeAre = () => {
 
         </motion.div>
 
-        <svg
-          className="absolute -bottom-px left-0 z-40 h-23.75 w-full"
-          viewBox="0 0 1440 120"
-          preserveAspectRatio="none"
-          fill="none"
-        >
-          <path
-            d="
-              M0 65
-              C180 20 300 105 510 70
-              C720 35 780 100 1010 70
-              C1190 45 1300 75 1440 35
-              L1440 120
-              L0 120
-              Z
-            "
-            fill="#063f35"
-          />
-        </svg>
+        
 
         {["left-[8%]", "right-[12%]"].map((position, index) => (
           <motion.div

@@ -6,7 +6,7 @@ import Footer from './assets/components/Footer.jsx'
 import PageTransition from './assets/components/PageTransition.jsx'
 import { getEventBySlug } from './data/events.js'
 
-const Home = lazy(() => import('./pages/Home.jsx'))
+const Home = lazy(() => import('./pages/Home/Home.jsx'))
 const Prabhupada = lazy(() => import('./pages/Prabhupada/Prabhupada.jsx'))
 const AboutUs = lazy(() => import('./pages/AboutUs/About.jsx'))
 const StudentCourses = lazy(() => import('./pages/StudentCourses.jsx'))

@@ -1,18 +1,20 @@
 import React from 'react'
-import AboutHero from './AboutHero'
-import WhoWeAre from './WhoWeAre'
 import OurTeam from './OurTeam'
 import OurCenters from './OurCenters'
 import OurServices from './OurServices'
+import Hero from './Hero'
+import Inspiration from './Inspiration'
+import Map from './Map'
 
 const About = () => {
   return (
     <>
-      <AboutHero />
-      <WhoWeAre />
+      <Hero />
+      <Inspiration />
       <OurTeam />
       <OurCenters />
       <OurServices />
+      <Map />
     </>
   )
 }
