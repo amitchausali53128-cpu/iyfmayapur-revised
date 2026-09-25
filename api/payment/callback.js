@@ -140,7 +140,7 @@ export default async function handler(
 
       const enrollResponse =
         await fetch(
-          `${lmsUrl}/api/internal/enroll`,
+          `${lmsUrl}/internal/enroll`,
           {
             method: "POST",
 
