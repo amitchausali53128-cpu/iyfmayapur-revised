@@ -636,7 +636,7 @@ function CheckoutModal({
        * initiate.js endpoint.
        */
       const response = await fetch(
-  "http://localhost:1769/api/payment/initiate",
+  "/api/payment/initiate",
   {
     method: "POST",
     headers: {
