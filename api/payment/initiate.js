@@ -63,7 +63,7 @@ export default function handler(request, response) {
       input.payment_type === "store";
 
     const isLmsPayment =
-      payment_type === "lms";
+      input.payment_type === "lms";
 
     let referenceId;
 
