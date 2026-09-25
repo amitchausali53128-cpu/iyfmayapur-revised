@@ -20,6 +20,8 @@ export default async function handler(request, response) {
       decryptPayload(request.query.data)
     );
 
+    console.log(claims);
+
     if (!claims.reference_id) {
       throw new Error(
         "Treasury response did not include a reference number"
