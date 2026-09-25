@@ -1,3 +1,6 @@
+const ALLOWED_ORIGIN = process.env.PUBLIC_SITE_URL || "http://localhost:5173";
+
+
 import { createCipheriv, createDecipheriv, randomUUID } from "node:crypto";
 import { createServer } from "node:http";
 import { readFileSync } from "node:fs";
@@ -22,10 +25,20 @@ const DEPARTMENT_CODE = "IYF";
 const payments = new Map();
 const requiredFields = ["email", "amount", "mobile", "first_name", "last_name", "address_1", "pin_code", "district", "city", "state", "country"];
 
+function setCorsHeaders(response) {
+  response.setHeader("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
+  response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+}
+
 function sendJson(response, status, body) {
-  response.writeHead(status, { "Content-Type": "application/json; charset=utf-8" });
+  setCorsHeaders(response);
+  response.writeHead(status, {
+    "Content-Type": "application/json; charset=utf-8",
+  });
   response.end(JSON.stringify(body));
 }
+
 
 function readJson(request) {
   return new Promise((resolve, reject) => {
@@ -103,7 +116,10 @@ async function handleInitiate(request, response) {
   const missing = requiredFields.filter((field) => !String(input[field] ?? "").trim());
   const amount = Number(input.amount);
   if (missing.length || !Number.isFinite(amount) || amount <= 0) return sendJson(response, 400, { error: "Please complete all required donation details.", fields: missing });
-  const referenceId = `IYF-${Date.now()}-${randomUUID().slice(0, 8).toUpperCase()}`;
+  const referenceId =
+  `IYF-STORE-${Date.now()}-${randomUUID().slice(0, 8).toUpperCase()}`;
+
+  
   const payload = {
     dept_code: DEPARTMENT_CODE, name: `${input.first_name} ${input.last_name}`, email: input.email,
     reference_id: referenceId, amount: amount.toFixed(2), mode: "1", type: "1", isRecurring: "0",
@@ -139,26 +155,121 @@ async function handleLmsInitiate(request, response) {
 
 function handleCallback(requestUrl, response) {
   try {
-    const result = decryptPayload(requestUrl.searchParams.get("data") || "");
-    const referenceId = result.reference_id || result.sub_merchant_reference_no;
-    if (!referenceId) throw new Error("Treasury response did not include a reference number");
+    const result = decryptPayload(
+      requestUrl.searchParams.get("data") || ""
+    );
+
+    const referenceId =
+      result.reference_id ||
+      result.sub_merchant_reference_no;
+
+    if (!referenceId) {
+      throw new Error(
+        "Treasury response did not include a reference number"
+      );
+    }
+
     const existing = payments.get(referenceId) || {};
+
     const succeeded = paymentSucceeded(result);
-    payments.set(referenceId, { ...existing, ...result, status: succeeded ? "success" : "failed", completed_at: new Date().toISOString() });
-    const courseId = existing.course_id || result.course_id || result.transaction_purpose?.match(/course[_ ]id[:=]([\w-]+)/i)?.[1] || "";
-    const destination = courseId ? `${SITE_URL}/lms/course/${encodeURIComponent(courseId)}` : `${SITE_URL}/donation`;
-    response.writeHead(302, { Location: `${destination}?reference_id=${encodeURIComponent(referenceId)}` });
+
+    const payment = {
+      ...existing,
+      ...result,
+      reference_id: referenceId,
+      status: succeeded ? "success" : "failed",
+      completed_at: new Date().toISOString(),
+    };
+
+    payments.set(referenceId, payment);
+
+    /*
+     * Determine the transaction type.
+     *
+     * We check BOTH the original request and the gateway
+     * callback because either one may contain the purpose.
+     */
+    const transactionPurpose = String(
+      result.transaction_purpose ||
+      result.Transaction_Purpose ||
+      existing.transaction_purpose ||
+      ""
+    ).trim();
+
+    /*
+     * LMS payment
+     */
+    const courseId =
+      existing.course_id ||
+      result.course_id ||
+      result.Course_Id ||
+      transactionPurpose.match(
+        /course[_ ]id[:=]([\w-]+)/i
+      )?.[1] ||
+      "";
+
+    /*
+     * Book-store payment
+     */
+    const isBookPurchase =
+      /book\s*purchase/i.test(transactionPurpose) ||
+      /book/i.test(transactionPurpose);
+
+    let destination;
+
+    if (courseId) {
+      destination =
+        `${SITE_URL}/lms/course/` +
+        `${encodeURIComponent(courseId)}`;
+    } else if (isBookPurchase) {
+      destination =
+        `${SITE_URL}/store/thank-you`;
+    } else {
+      destination =
+        `${SITE_URL}/donation`;
+    }
+
+    const separator = destination.includes("?")
+      ? "&"
+      : "?";
+
+    response.writeHead(302, {
+      Location:
+        `${destination}${separator}` +
+        `reference_id=${encodeURIComponent(referenceId)}` +
+        `&status=${encodeURIComponent(payment.status)}`,
+    });
+
     response.end();
   } catch (error) {
-    console.error("Payment callback error:", error.message);
-    response.writeHead(302, { Location: `${SITE_URL}/donation?payment_error=callback` });
+    console.error(
+      "Payment callback error:",
+      error.message
+    );
+
+    response.writeHead(302, {
+      Location:
+        `${SITE_URL}/donation?payment_error=callback`,
+    });
+
     response.end();
   }
 }
-
 const server = createServer(async (request, response) => {
-  const requestUrl = new URL(request.url, `http://${request.headers.host}`);
+  const requestUrl = new URL(
+    request.url,
+    `http://${request.headers.host}`
+  );
+
+  if (request.method === "OPTIONS") {
+    setCorsHeaders(response);
+    response.writeHead(204);
+    return response.end();
+  }
+
   try {
+    // existing routes...
+
     if (request.method === "POST" && requestUrl.pathname === "/api/payment/initiate") return await handleInitiate(request, response);
     if (request.method === "POST" && requestUrl.pathname === "/api/lms/payment/initiate") return await handleLmsInitiate(request, response);
     if (request.method === "GET" && requestUrl.pathname === "/api/payment/callback") return handleCallback(requestUrl, response);

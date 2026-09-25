@@ -22,6 +22,8 @@ const Store = lazy(() => import('./pages/Store.jsx'))
 const Courses = lazy(() => import('./pages/Courses.jsx'))
 const LmsApp = lazy(() => import('./lms/LmsApp.jsx'))
 const Donation = lazy(() => import('./pages/Donation.jsx'))
+const JoinUs = lazy(() => import('./pages/JoinUs/JoinUs.jsx'))
+const StoreThankYou = lazy(() => import('./pages/ThankStore.jsx'))
 
 function PageLoader() {
   return <div className="flex min-h-[40vh] items-center justify-center text-sm text-stone-500">Loading...</div>
@@ -75,7 +77,13 @@ function App() {
               <Route path="/player" element={<PageTransition><Player /></PageTransition>} />
               <Route path="/player/:courseId" element={<PageTransition><Player /></PageTransition>} />
               <Route path="/gallery" element={<PageTransition><Gallery /></PageTransition>} />
+              <Route path="/join" element={<PageTransition><JoinUs /></PageTransition>} />
               <Route path="*" element={<PageTransition><PageNotFound /></PageTransition>} />
+              <Route
+  path="/store/thank-you"
+  element={<StoreThankYou />}
+/>
+
             </Routes>
           </Suspense>
         </AnimatePresence>

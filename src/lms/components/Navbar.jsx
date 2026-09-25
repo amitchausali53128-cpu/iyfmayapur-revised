@@ -31,12 +31,12 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 z-50 h-16 w-full border-b border-slate-800 bg-blue-300 shadow-lg backdrop-blur-xl">
+    <nav className="fixed top-0 left-0 z-50 h-16 w-full bg-white/80 shadow-lg backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
 
         {/* Logo */}
         <Link to="/lms" className="flex items-center gap-3 group">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 shadow-lg shadow-indigo-500/30 transition-all duration-300 group-hover:shadow-indigo-500/50">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl shadow-lg transition-all duration-300 ">
             <img className="block h-full w-full object-contain" src="/logo.png" alt="IYF Mayapur"/>
           </div>
           <div className="flex flex-col">
