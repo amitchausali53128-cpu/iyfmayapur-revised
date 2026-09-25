@@ -618,45 +618,37 @@ function CheckoutModal({
       const missing = Object.entries(form)
         .filter(([key]) => {
           if (key === "address_2") return false;
-          return !String(key === "country" ? form[key] : form[key]).trim();
+          return !String(form[key]).trim();
         })
         .map(([key]) => key);
 
       if (missing.length) {
-        throw new Error("Please complete all required customer details.");
+        throw new Error(
+          "Please complete all required customer details."
+        );
       }
 
-      /*
-       * IMPORTANT:
-       *
-       * Replace this endpoint with the HDFC PG endpoint
-       * that your BOOK STORE backend exposes.
-       *
-       * This is intentionally NOT your LMS/donation
-       * initiate.js endpoint.
-       */
-      const response = await fetch(
-  "/api/payment/initiate",
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      ...form,
-      amount: total,
-      transaction_purpose: "Book Purchase",
-    }),
-  }
-);
-
+      const response = await fetch("/api/payment/initiate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...form,
+          payment_type: "store",
+          amount: total,
+          transaction_purpose: "Book Purchase",
+        }),
+      });
 
       let data = {};
 
       try {
         data = await response.json();
       } catch {
-        throw new Error("Invalid response from the payment server.");
+        throw new Error(
+          "Invalid response from the payment server."
+        );
       }
 
       if (!response.ok) {
@@ -671,9 +663,6 @@ function CheckoutModal({
         );
       }
 
-      /*
-       * Redirect the browser to the HDFC payment page.
-       */
       window.location.assign(data.payment_url);
     } catch (err) {
       console.error("HDFC payment error:", err);
@@ -688,25 +677,40 @@ function CheckoutModal({
     }
   };
 
+  const inputClass =
+    "mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10";
+
+  const labelClass =
+    "block text-sm font-medium text-gray-700";
+
   return (
-    <div className="book-checkout-modal">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Overlay */}
       <button
         type="button"
-        className="book-checkout-modal__overlay"
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
         aria-label="Close checkout"
       />
 
+      {/* Modal */}
       <div
-        className="book-checkout-modal__panel"
+        className="relative z-10 max-h-[95vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-2xl"
         role="dialog"
         aria-modal="true"
         aria-labelledby="book-checkout-title"
       >
-        <div className="book-checkout-modal__header">
+        {/* Header */}
+        <div className="sticky top-0 z-10 flex items-start justify-between border-b border-gray-200 bg-white px-6 py-5 sm:px-8">
           <div>
-            <p className="book-store-eyebrow">Secure checkout</p>
-            <h2 id="book-checkout-title">
+            <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-green-600">
+              Secure checkout
+            </p>
+
+            <h2
+              id="book-checkout-title"
+              className="text-2xl font-bold text-gray-900"
+            >
               Delivery details
             </h2>
           </div>
@@ -715,15 +719,18 @@ function CheckoutModal({
             type="button"
             onClick={onClose}
             aria-label="Close checkout"
+            className="ml-4 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-gray-500 transition hover:bg-gray-100 hover:text-gray-900"
           >
-            <FiX />
+            <FiX className="h-5 w-5" />
           </button>
         </div>
 
         <form onSubmit={submitPayment}>
-          <div className="book-checkout-form">
-            <div className="book-checkout-form__row">
-              <label>
+          {/* Form */}
+          <div className="space-y-5 px-6 py-6 sm:px-8">
+            {/* First / Last Name */}
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <label className={labelClass}>
                 First name *
                 <input
                   name="first_name"
@@ -731,10 +738,11 @@ function CheckoutModal({
                   onChange={updateField}
                   autoComplete="given-name"
                   required
+                  className={inputClass}
                 />
               </label>
 
-              <label>
+              <label className={labelClass}>
                 Last name *
                 <input
                   name="last_name"
@@ -742,12 +750,14 @@ function CheckoutModal({
                   onChange={updateField}
                   autoComplete="family-name"
                   required
+                  className={inputClass}
                 />
               </label>
             </div>
 
-            <div className="book-checkout-form__row">
-              <label>
+            {/* Email / Mobile */}
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <label className={labelClass}>
                 Email *
                 <input
                   type="email"
@@ -756,10 +766,11 @@ function CheckoutModal({
                   onChange={updateField}
                   autoComplete="email"
                   required
+                  className={inputClass}
                 />
               </label>
 
-              <label>
+              <label className={labelClass}>
                 Mobile *
                 <input
                   type="tel"
@@ -769,11 +780,13 @@ function CheckoutModal({
                   autoComplete="tel"
                   inputMode="tel"
                   required
+                  className={inputClass}
                 />
               </label>
             </div>
 
-            <label>
+            {/* Address */}
+            <label className={labelClass}>
               Address line 1 *
               <input
                 name="address_1"
@@ -781,21 +794,24 @@ function CheckoutModal({
                 onChange={updateField}
                 autoComplete="address-line1"
                 required
+                className={inputClass}
               />
             </label>
 
-            <label>
+            <label className={labelClass}>
               Address line 2
               <input
                 name="address_2"
                 value={form.address_2}
                 onChange={updateField}
                 autoComplete="address-line2"
+                className={inputClass}
               />
             </label>
 
-            <div className="book-checkout-form__row">
-              <label>
+            {/* PIN / District */}
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <label className={labelClass}>
                 PIN code *
                 <input
                   name="pin_code"
@@ -804,22 +820,25 @@ function CheckoutModal({
                   autoComplete="postal-code"
                   inputMode="numeric"
                   required
+                  className={inputClass}
                 />
               </label>
 
-              <label>
+              <label className={labelClass}>
                 District *
                 <input
                   name="district"
                   value={form.district}
                   onChange={updateField}
                   required
+                  className={inputClass}
                 />
               </label>
             </div>
 
-            <div className="book-checkout-form__row">
-              <label>
+            {/* City / State */}
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <label className={labelClass}>
                 City *
                 <input
                   name="city"
@@ -827,10 +846,11 @@ function CheckoutModal({
                   onChange={updateField}
                   autoComplete="address-level2"
                   required
+                  className={inputClass}
                 />
               </label>
 
-              <label>
+              <label className={labelClass}>
                 State *
                 <input
                   name="state"
@@ -838,11 +858,13 @@ function CheckoutModal({
                   onChange={updateField}
                   autoComplete="address-level1"
                   required
+                  className={inputClass}
                 />
               </label>
             </div>
 
-            <label>
+            {/* Country */}
+            <label className={labelClass}>
               Country *
               <input
                 name="country"
@@ -850,55 +872,75 @@ function CheckoutModal({
                 onChange={updateField}
                 autoComplete="country-name"
                 required
+                className={inputClass}
               />
             </label>
           </div>
 
-          <div className="book-checkout-total">
-            <div>
-              <span>Subtotal</span>
-              <strong>₹{subtotal}</strong>
-            </div>
+          {/* Order Summary */}
+          <div className="border-y border-gray-200 bg-gray-50 px-6 py-5 sm:px-8">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-sm text-gray-600">
+                <span>Subtotal</span>
+                <strong className="font-semibold text-gray-900">
+                  ₹{subtotal}
+                </strong>
+              </div>
 
-            <div>
-              <span>Shipping</span>
-              <strong>
-                {shipping === 0 ? "Free" : `₹${shipping}`}
-              </strong>
-            </div>
+              <div className="flex items-center justify-between text-sm text-gray-600">
+                <span>Shipping</span>
+                <strong className="font-semibold text-gray-900">
+                  {shipping === 0 ? "Free" : `₹${shipping}`}
+                </strong>
+              </div>
 
-            <div>
-              <span>Total payable</span>
-              <strong>₹{total}</strong>
+              <div className="flex items-center justify-between border-t border-gray-200 pt-3 text-base">
+                <span className="font-semibold text-gray-900">
+                  Total payable
+                </span>
+
+                <strong className="text-lg font-bold text-gray-900">
+                  ₹{total}
+                </strong>
+              </div>
             </div>
           </div>
 
+          {/* Error */}
           {error && (
             <div
-              className="book-checkout-error"
+              className="mx-6 mt-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 sm:mx-8"
               role="alert"
             >
               {error}
             </div>
           )}
 
-          <button
-            type="submit"
-            className="book-checkout-button"
-            disabled={loading || !cart.length}
-          >
-            {loading
-              ? "Connecting to HDFC..."
-              : "Pay securely"}
-            {!loading && <FiArrowRight />}
-          </button>
+          {/* Submit */}
+          <div className="px-6 py-6 sm:px-8">
+            <button
+              type="submit"
+              disabled={loading || !cart.length}
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-gray-900 px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {loading
+                ? "Connecting to HDFC..."
+                : "Pay securely"}
 
-          <small className="book-checkout-secure-note">
-            You will be securely redirected to the HDFC
-            payment gateway to complete your payment.
-          </small>
+              {!loading && (
+                <FiArrowRight className="h-4 w-4" />
+              )}
+            </button>
+
+            <small className="mt-3 block text-center text-xs leading-5 text-gray-500">
+              You will be securely redirected to the HDFC payment
+              gateway to complete your payment.
+            </small>
+          </div>
         </form>
       </div>
     </div>
   );
 }
+
+

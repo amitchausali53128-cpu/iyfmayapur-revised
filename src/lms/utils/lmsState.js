@@ -306,22 +306,31 @@ export async function enrollInCourse(courseId) {
   });
 }
 
-export async function initiateTreasuryPayment(paymentData) {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    throw new Error('User session is required to start a payment.');
+export async function initiateTreasuryPayment(payload) {
+  const response = await fetch("/api/payment/initiate", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data?.error || "Unable to start payment."
+    );
   }
 
-  return await paymentApiRequest('/api/lms/payment/initiate', {
-    method: 'POST',
-    body: JSON.stringify(paymentData),
-  });
+  return data;
 }
+
 
 export async function getTreasuryPaymentStatus(referenceId, paymentToken = '') {
   const endpoint = paymentToken
-    ? `/api/lms/payment/status?token=${encodeURIComponent(paymentToken)}`
-    : `/api/lms/payment/status/${encodeURIComponent(referenceId)}`;
+    ? `/api/payment/status?token=${encodeURIComponent(paymentToken)}`
+    : `/api/payment/status/${encodeURIComponent(referenceId)}`;
   return await paymentApiRequest(endpoint);
 }
 

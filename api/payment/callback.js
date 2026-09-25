@@ -43,7 +43,7 @@ export default function handler(request, response) {
     }
 
     // Existing LMS payment
-    if (claims.course_id) {
+    if (String(claims.reference_id).startsWith("IYF-LMS-")) {
       const destination =
         `${siteUrl}/lms/course/` +
         `${encodeURIComponent(claims.course_id)}`;
