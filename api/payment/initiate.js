@@ -29,6 +29,7 @@ export default function handler(request, response) {
   try {
     const input = request.body || {};
 
+    console.log("Payment initiation request:", input);
     const missing = required.filter(
       (field) => !String(input[field] ?? "").trim()
     );
