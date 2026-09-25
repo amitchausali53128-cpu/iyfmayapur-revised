@@ -398,7 +398,7 @@ export default function ViewCourse() {
          * This identifies the payment as an LMS payment.
          */
         course_id: String(course._id),
-
+        user_id: String(student._id),
         transaction_purpose:
           `LMS Course Enrollment (course_id:${course._id})`,
       };
