@@ -161,7 +161,7 @@ export default function ViewCourse() {
          */
         if (paymentToken) {
           const response = await fetch(
-            `/api/lms/payment/status?token=${encodeURIComponent(
+            `/api/payment/status?token=${encodeURIComponent(
               paymentToken
             )}`
           );
@@ -175,7 +175,7 @@ export default function ViewCourse() {
           payment = await response.json();
         } else {
           const response = await fetch(
-            `/api/lms/payment/status/${encodeURIComponent(
+            `/api/payment/status/${encodeURIComponent(
               referenceId
             )}`
           );
