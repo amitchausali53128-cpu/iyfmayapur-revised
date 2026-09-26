@@ -214,9 +214,9 @@ export default function ViewCourse() {
             replace: true,
           });
 
-          navigate(`/player/${courseId}`, {
-            replace: true,
-          });
+          // navigate(`/player/${courseId}`, {
+          //   replace: true,
+          // });
 
           return;
         }

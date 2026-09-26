@@ -245,7 +245,8 @@ export default async function handler(
 
     return response.redirect(
       302,
-      `${siteUrl}/donation?payment_error=callback`
+      // `${siteUrl}/donation?payment_error=callback`
+      `${siteUrl}/payment_error`
     );
   }
 }
