@@ -1,8 +1,14 @@
+import { Resend } from "resend";
+
 import {
   callbackClaims,
   decryptPayload,
   signPaymentToken,
 } from "../_lib/treasury.js";
+
+const resend = new Resend(
+  process.env.RESEND_API_KEY
+);
 
 export default async function handler(
   request,
@@ -29,10 +35,6 @@ export default async function handler(
       request.query.data
     );
 
-    /*
-     * Debug only the useful field names.
-     * Avoid logging the complete customer payload.
-     */
     console.log(
       "Treasury callback fields:",
       Object.keys(decrypted)
@@ -40,9 +42,6 @@ export default async function handler(
 
     /*
      * 2. Normalize callback.
-     *
-     * course_id and user_id are recovered from
-     * our IYF-LMS reference.
      */
     const claims =
       callbackClaims(decrypted);
@@ -87,6 +86,171 @@ export default async function handler(
      * 5. STORE PAYMENT
      */
     if (isStorePayment) {
+      /*
+       * Send store notification email.
+       *
+       * IMPORTANT:
+       * Email failure must NOT make the payment
+       * itself fail. The payment has already been
+       * confirmed by Treasury.
+       */
+      try {
+        if (!process.env.RESEND_API_KEY) {
+          throw new Error(
+            "RESEND_API_KEY is not configured"
+          );
+        }
+
+        if (!process.env.STORE_NOTIFICATION_EMAIL) {
+          throw new Error(
+            "STORE_NOTIFICATION_EMAIL is not configured"
+          );
+        }
+
+        if (!process.env.RESEND_FROM_EMAIL) {
+          throw new Error(
+            "RESEND_FROM_EMAIL is not configured"
+          );
+        }
+
+        const customerName = [
+          decrypted.first_name,
+          decrypted.middle_name,
+          decrypted.last_name,
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .trim();
+
+        const customerEmail =
+          decrypted.email ||
+          "";
+
+        const customerMobile =
+          decrypted.mobile ||
+          "";
+
+        const customerAddress = [
+          decrypted.address_1,
+          decrypted.address_2,
+          decrypted.post_office,
+          decrypted.city,
+          decrypted.district,
+          decrypted.state,
+          decrypted.pin_code,
+          decrypted.country,
+        ]
+          .filter(Boolean)
+          .join(", ");
+
+        await resend.emails.send({
+          from:
+            process.env.RESEND_FROM_EMAIL,
+
+          to:
+            process.env.STORE_NOTIFICATION_EMAIL,
+
+          subject:
+            `New Book Order - ${claims.reference_id}`,
+
+          html: `
+            <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #222;">
+              <h2>New Book Purchase</h2>
+
+              <p>
+                A new book purchase has been successfully
+                completed.
+              </p>
+
+              <h3>Payment Details</h3>
+
+              <table cellpadding="6" cellspacing="0" border="0">
+                <tr>
+                  <td><strong>Reference ID</strong></td>
+                  <td>${claims.reference_id}</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Transaction ID</strong></td>
+                  <td>${claims.transaction_id || "-"}</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Payment ID</strong></td>
+                  <td>${claims.payment_id || "-"}</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Amount</strong></td>
+                  <td>INR ${claims.amount}</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Payment Mode</strong></td>
+                  <td>${claims.payment_mode || "-"}</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Transaction Date</strong></td>
+                  <td>${claims.transaction_date}</td>
+                </tr>
+              </table>
+
+              <h3>Customer Details</h3>
+
+              <table cellpadding="6" cellspacing="0" border="0">
+                <tr>
+                  <td><strong>Name</strong></td>
+                  <td>${customerName || "-"}</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Email</strong></td>
+                  <td>${customerEmail || "-"}</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Mobile</strong></td>
+                  <td>${customerMobile || "-"}</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Address</strong></td>
+                  <td>${customerAddress || "-"}</td>
+                </tr>
+              </table>
+
+              <p style="margin-top: 24px;">
+                This notification was generated automatically
+                after successful payment confirmation.
+              </p>
+            </div>
+          `,
+        });
+
+        console.log(
+          "Store purchase notification email sent:",
+          {
+            reference_id:
+              claims.reference_id,
+            payment_id:
+              claims.payment_id,
+          }
+        );
+      } catch (emailError) {
+        /*
+         * Do NOT turn a successful payment into a
+         * failed payment just because email failed.
+         */
+        console.error(
+          "Store notification email failed:",
+          emailError
+        );
+      }
+
+      /*
+       * Customer-facing redirect.
+       */
       const token =
         signPaymentToken(claims);
 
@@ -119,8 +283,6 @@ export default async function handler(
 
       /*
        * Internal server-to-server enrollment.
-       *
-       * The browser never calls this endpoint.
        */
       const lmsUrl =
         process.env.LMS_API_URL ||
@@ -153,7 +315,8 @@ export default async function handler(
             },
 
             body: JSON.stringify({
-              user_id: claims.user_id,
+              user_id:
+                claims.user_id,
 
               course_id:
                 claims.course_id,
@@ -168,12 +331,6 @@ export default async function handler(
                 claims.amount,
 
               currency: "INR",
-
-              /*
-               * This is the server's authenticated
-               * internal request, so there is no need
-               * to send an undefined Treasury signature.
-               */
             }),
           }
         );
@@ -202,7 +359,7 @@ export default async function handler(
       }
 
       /*
-       * 7. Only redirect to the course after
+       * Only redirect to the course after
        * enrollment succeeds.
        */
       const token =
@@ -223,7 +380,7 @@ export default async function handler(
     }
 
     /*
-     * 8. DONATION
+     * 7. DONATION
      */
     const token =
       signPaymentToken(claims);
@@ -245,7 +402,6 @@ export default async function handler(
 
     return response.redirect(
       302,
-      // `${siteUrl}/donation?payment_error=callback`
       `${siteUrl}/payment_error`
     );
   }
