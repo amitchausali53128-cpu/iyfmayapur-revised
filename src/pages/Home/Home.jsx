@@ -1,5 +1,5 @@
 import { createElement, useEffect, useState } from "react";
-import './bhagwatam.css';
+// import './bhagwatam.css';
 import { motion } from 'framer-motion';
 import {
   FiArrowUpRight,
@@ -10,6 +10,7 @@ import {
   FiChevronRight,
   FiExternalLink,
   FiHeart,
+  FiPhone,
   FiUsers,
 } from "react-icons/fi";
 import Masonry from "react-masonry-css";
@@ -19,6 +20,7 @@ import AnimatedCard from '../../assets/components/AnimatedCard.jsx';
 import { cloudinaryAsset } from "../../lib/cloudinary.js";
 import AboutHero from "./AboutHero.jsx";
 import WhoWeAre from "./WhoWeAre.jsx";
+import BhagavatamFeature from "../../assets/Bhagavatam.jsx";
 
 const lifeImages = [
   "img0.jpg",
@@ -130,59 +132,9 @@ export default function Home() {
       <AboutHero />
    
 
-<motion.section
-  className="home-bhagavatam-feature"
-  initial={{ opacity: 0, y: 30 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  viewport={{ once: true, amount: 0.2 }}
-  transition={{ duration: 0.7 }}
->
-  <div className="home-bhagavatam-feature__inner home-shell">
+      <BhagavatamFeature />
 
-    <div className="home-bhagavatam-feature__badge">
-      <FiBookOpen aria-hidden="true" />
-      <span>Srimad Bhagavatam</span>
-    </div>
 
-    <div className="home-bhagavatam-feature__content">
-
-      <div>
-        <p className="home-bhagavatam-feature__eyebrow">
-          Bring timeless wisdom into your home
-        </p>
-
-        <h2>
-          Invite
-          <br />
-          <span>Srimad Bhagavatam</span>
-          <br />
-          to your home
-        </h2>
-
-        <p>
-          Explore the teachings of Srimad Bhagavatam and deepen
-          your spiritual journey through the timeless wisdom of
-          Krishna and His devotees.
-        </p>
-
-        <a
-          href="https://forms.gle/rVodJUC1FQBCB7yX9"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="home-bhagavatam-feature__button"
-        >
-          Get Srimad Bhagavatam
-          <FiArrowUpRight aria-hidden="true" />
-        </a>
-      </div>
-
-      <div className="home-bhagavatam-feature__book">
-        <img src="/Bhagwatam.png" alt="" />
-      </div>
-
-    </div>
-  </div>
-</motion.section>
          <WhoWeAre />
         <motion.section
           className="home-pathways home-shell"

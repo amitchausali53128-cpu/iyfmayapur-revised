@@ -1,239 +1,350 @@
+/* =========================================================
+   SRIMAD BHAGAVATAM FEATURE
+   ========================================================= */
+
 .home-bhagavatam-feature {
   padding: 45px 0;
   background: #f7efe2;
 }
 
-/* Main feature container */
 .home-bhagavatam-feature__inner {
   position: relative;
   overflow: hidden;
-
-  width: 100%;
-  box-sizing: border-box;
-
-  padding: 50px 60px;
-
+  padding: 55px 65px;
   border-radius: 28px;
-
   background: linear-gradient(120deg, #fffaf1, #f2dfc1);
-
   box-shadow: 0 18px 50px rgba(80, 50, 20, 0.12);
 }
 
-/* Badge */
+
+/* =========================================================
+   BADGE
+   ========================================================= */
+
 .home-bhagavatam-feature__badge {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
 
-  margin-bottom: 25px;
   padding: 8px 15px;
+  margin-bottom: 28px;
 
   border-radius: 999px;
 
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(139, 94, 52, 0.09);
+  color: #8b5e34;
 
-  color: #8b531f;
-
-  font-size: 13px;
+  font-size: 0.82rem;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-/* Main content */
-.home-bhagavatam-feature__content {
-  position: relative;
-  z-index: 2;
+.home-bhagavatam-feature__badge svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+}
 
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.home-bhagavatam-feature__content {
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  gap: 60px;
+  gap: 70px;
 }
 
-/* Text area */
+
+/* =========================================================
+   TEXT CONTENT
+   ========================================================= */
+
 .home-bhagavatam-feature__content > div:first-child {
-  flex: 1;
+  flex: 1 1 55%;
   min-width: 0;
 }
 
 .home-bhagavatam-feature__eyebrow {
-  margin: 0 0 10px;
+  margin: 0 0 12px;
 
-  color: #9a622c;
+  color: #9a6a3a;
 
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.home-bhagavatam-feature h2 {
-  margin: 0 0 18px;
+.home-bhagavatam-feature__content h2 {
+  margin: 0;
 
-  font-size: clamp(36px, 5vw, 60px);
+  color: #4a301d;
+
+  font-size: clamp(2.3rem, 4vw, 4.2rem);
   line-height: 1.05;
-
-  color: #352313;
+  font-weight: 700;
 }
 
-.home-bhagavatam-feature h2 span {
-  color: #9a5b20;
+.home-bhagavatam-feature__content h2 span {
+  color: #9a5d2c;
 }
 
-.home-bhagavatam-feature__content p:not(.home-bhagavatam-feature__eyebrow) {
-  max-width: 620px;
+.home-bhagavatam-feature__content p.text-gray-700 {
+  max-width: 680px;
+  margin-top: 22px;
 
-  margin: 0 0 28px;
+  color: #625344;
 
-  color: #66594b;
-
-  font-size: 17px;
-  line-height: 1.7;
+  font-size: 1rem;
+  line-height: 1.75;
 }
 
-/* Button */
+
+/* =========================================================
+   SOURCE / PADMA PURANA
+   ========================================================= */
+
+.home-bhagavatam-feature__source {
+  margin-top: 10px !important;
+  margin-bottom: 0;
+
+  color: #8b6b4a !important;
+
+  font-size: 0.88rem !important;
+  font-style: italic;
+  line-height: 1.4 !important;
+}
+
+
+/* =========================================================
+   BUTTON + CONTACT ROW
+   ========================================================= */
+
+.home-bhagavatam-feature__actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  margin-top: 28px;
+
+  flex-wrap: wrap;
+}
+
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
 .home-bhagavatam-feature__button {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  gap: 9px;
 
-  padding: 14px 23px;
+  min-height: 48px;
+  padding: 13px 21px;
 
-  border-radius: 999px;
+  border-radius: 12px;
 
-  background: #9a5b20;
-  color: white;
+  background: #8b5e34;
+  color: #ffffff;
+
+  font-size: 0.92rem;
+  font-weight: 700;
 
   text-decoration: none;
-  font-weight: 700;
+
+  box-shadow: 0 8px 20px rgba(100, 60, 25, 0.18);
 
   transition:
     transform 0.25s ease,
+    background 0.25s ease,
     box-shadow 0.25s ease;
 }
 
 .home-bhagavatam-feature__button:hover {
-  transform: translateY(-3px);
+  background: #754b27;
 
-  box-shadow: 0 10px 25px rgba(100, 55, 15, 0.25);
+  transform: translateY(-2px);
+
+  box-shadow: 0 12px 25px rgba(100, 60, 25, 0.25);
 }
 
-/* Bhagavatam book */
-.home-bhagavatam-feature__book {
+.home-bhagavatam-feature__button svg {
+  width: 17px;
+  height: 17px;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   CONTACT
+   ========================================================= */
+
+.home-bhagavatam-feature__contact {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
+
+  font-size: 0.82rem;
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+.home-bhagavatam-feature__contact > span {
+  color: #7a684f;
+  font-weight: 500;
+}
+
+.home-bhagavatam-feature__contact a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  color: #8b5e34;
+
+  font-weight: 600;
+
+  text-decoration: none;
+}
+
+.home-bhagavatam-feature__contact a:hover {
+  text-decoration: underline;
+}
+
+.home-bhagavatam-feature__contact a svg {
+  width: 14px;
+  height: 14px;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   IMAGE
+   ========================================================= */
+
+.home-bhagavatam-feature__image {
+  display: block;
 
   flex: 0 0 auto;
 
-  width: 300px;
-  height: 400px;
+  width: min(100%, 480px);
+  max-width: 480px;
 
-  border-radius: 14px;
+  height: auto;
 
-  background: #fff;
+  object-fit: contain;
 
-  color: #9a5b20;
+  margin: 0 auto;
 
-  font-size: 130px;
+  filter: drop-shadow(
+    15px 20px 25px rgba(70, 40, 10, 0.18)
+  );
 
-  box-shadow: 15px 20px 40px rgba(70, 40, 10, 0.16);
-
-  /* Keep book straight */
-  transform: none;
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
 }
 
-/* Book image */
-.home-bhagavatam-feature__book img {
-  display: block;
+.home-bhagavatam-feature__image:hover {
+  transform: translateY(-5px);
 
-  width: 100%;
-  height: 100%;
-
-  object-fit: cover;
-
-  border-radius: 14px;
+  filter: drop-shadow(
+    18px 25px 30px rgba(70, 40, 10, 0.22)
+  );
 }
 
 
-/* =====================================================
-   TABLET
-   ===================================================== */
+/* =========================================================
+   1100px
+   ========================================================= */
 
-@media (max-width: 1000px) {
+@media (max-width: 1100px) {
 
   .home-bhagavatam-feature__inner {
-    padding: 45px 40px;
+    padding: 50px 45px;
   }
 
   .home-bhagavatam-feature__content {
-    gap: 40px;
+    gap: 45px;
   }
 
-  .home-bhagavatam-feature h2 {
-    font-size: clamp(34px, 5vw, 50px);
+  .home-bhagavatam-feature__content h2 {
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
   }
 
-  .home-bhagavatam-feature__book {
-    width: 250px;
-    height: 340px;
+  .home-bhagavatam-feature__image {
+    width: min(100%, 420px);
+    max-width: 420px;
   }
-
 }
 
 
-/* =====================================================
-   SMALL TABLET / LARGE MOBILE
-   ===================================================== */
+/* =========================================================
+   900px
+   ========================================================= */
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
 
   .home-bhagavatam-feature {
     padding: 35px 0;
   }
 
   .home-bhagavatam-feature__inner {
-    padding: 40px 30px;
+    padding: 42px 35px;
+    border-radius: 24px;
   }
 
   .home-bhagavatam-feature__content {
     gap: 35px;
   }
 
-  .home-bhagavatam-feature__book {
-    width: 220px;
-    height: 300px;
+  .home-bhagavatam-feature__content h2 {
+    font-size: 2.6rem;
   }
 
-  .home-bhagavatam-feature__content p:not(.home-bhagavatam-feature__eyebrow) {
-    font-size: 16px;
+  .home-bhagavatam-feature__content p.text-gray-700 {
+    font-size: 0.95rem;
   }
 
+  .home-bhagavatam-feature__image {
+    width: min(100%, 360px);
+    max-width: 360px;
+  }
+
+  .home-bhagavatam-feature__actions {
+    gap: 14px;
+  }
 }
 
 
-/* =====================================================
-   MOBILE
-   ===================================================== */
+/* =========================================================
+   700px
+   ========================================================= */
 
-@media (max-width: 650px) {
+@media (max-width: 700px) {
 
   .home-bhagavatam-feature {
     padding: 25px 0;
   }
 
   .home-bhagavatam-feature__inner {
-    padding: 35px 22px;
-
+    padding: 35px 25px;
     border-radius: 22px;
   }
 
   .home-bhagavatam-feature__badge {
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 
-    font-size: 11px;
-    padding: 7px 12px;
+    font-size: 0.76rem;
   }
 
   .home-bhagavatam-feature__content {
@@ -241,78 +352,156 @@
 
     align-items: center;
 
-    gap: 30px;
-
-    text-align: center;
+    gap: 35px;
   }
 
   .home-bhagavatam-feature__content > div:first-child {
     width: 100%;
   }
 
-  .home-bhagavatam-feature__eyebrow {
-    font-size: 14px;
+  .home-bhagavatam-feature__content h2 {
+    font-size: 2.45rem;
   }
 
-  .home-bhagavatam-feature h2 {
-    font-size: clamp(32px, 9vw, 44px);
+  .home-bhagavatam-feature__content p.text-gray-700 {
+    max-width: none;
 
-    line-height: 1.1;
+    margin-top: 18px;
+
+    font-size: 0.94rem;
+    line-height: 1.65;
   }
 
-  .home-bhagavatam-feature__content p:not(.home-bhagavatam-feature__eyebrow) {
-    max-width: 100%;
-
-    font-size: 15px;
-    line-height: 1.6;
+  .home-bhagavatam-feature__image {
+    width: min(100%, 350px);
+    max-width: 350px;
   }
 
-  .home-bhagavatam-feature__button {
-    padding: 13px 20px;
+  /*
+     Keep button and contact together when possible
+  */
+  .home-bhagavatam-feature__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 
-    font-size: 14px;
+    margin-top: 24px;
   }
 
-  .home-bhagavatam-feature__book {
-    width: 230px;
-    height: 310px;
-
-    margin: 5px auto 0;
+  .home-bhagavatam-feature__contact {
+    font-size: 0.78rem;
   }
-
 }
 
 
-/* =====================================================
-   SMALL PHONES
-   ===================================================== */
+/* =========================================================
+   550px
+   ========================================================= */
 
-@media (max-width: 400px) {
+@media (max-width: 550px) {
+
+  .home-bhagavatam-feature__inner {
+    padding: 30px 20px;
+  }
+
+  .home-bhagavatam-feature__content h2 {
+    font-size: 2.2rem;
+  }
+
+  .home-bhagavatam-feature__actions {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .home-bhagavatam-feature__button {
+    width: 100%;
+  }
+
+  .home-bhagavatam-feature__contact {
+    width: 100%;
+
+    justify-content: center;
+
+    font-size: 0.78rem;
+  }
+
+  .home-bhagavatam-feature__image {
+    width: min(100%, 330px);
+    max-width: 330px;
+  }
+}
+
+
+/* =========================================================
+   450px
+   ========================================================= */
+
+@media (max-width: 450px) {
 
   .home-bhagavatam-feature {
     padding: 20px 0;
   }
 
   .home-bhagavatam-feature__inner {
-    padding: 30px 18px;
+    padding: 28px 18px;
 
     border-radius: 18px;
   }
 
-  .home-bhagavatam-feature h2 {
-    font-size: 32px;
+  .home-bhagavatam-feature__badge {
+    padding: 7px 12px;
+
+    font-size: 0.7rem;
   }
 
-  .home-bhagavatam-feature__book {
-    width: 200px;
-    height: 270px;
+  .home-bhagavatam-feature__content h2 {
+    font-size: 2rem;
+  }
+
+  .home-bhagavatam-feature__content p.text-gray-700 {
+    font-size: 0.9rem;
   }
 
   .home-bhagavatam-feature__button {
-    width: 100%;
-    justify-content: center;
+    min-height: 45px;
 
-    box-sizing: border-box;
+    padding: 11px 17px;
+
+    font-size: 0.86rem;
   }
 
+  .home-bhagavatam-feature__contact {
+    font-size: 0.74rem;
+  }
+
+  .home-bhagavatam-feature__image {
+    width: min(100%, 310px);
+    max-width: 310px;
+  }
+}
+
+
+/* =========================================================
+   350px
+   ========================================================= */
+
+@media (max-width: 350px) {
+
+  .home-bhagavatam-feature__inner {
+    padding: 25px 15px;
+  }
+
+  .home-bhagavatam-feature__content h2 {
+    font-size: 1.8rem;
+  }
+
+  .home-bhagavatam-feature__contact {
+    font-size: 0.7rem;
+  }
+
+  .home-bhagavatam-feature__image {
+    width: min(100%, 290px);
+    max-width: 290px;
+  }
 }
