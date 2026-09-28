@@ -179,7 +179,7 @@ export default async function handler(request, response) {
   process.env.BOOK_SERVER_URL ||
   "http://localhost:3000";
 
-  const books = (JSON.parse(input.cart) || []).map((book) => ({
+  const books = (input.cart|| []).map((book) => ({
     id: book.id,
     book_quantity: book.qty,
     book_name: book.title,
