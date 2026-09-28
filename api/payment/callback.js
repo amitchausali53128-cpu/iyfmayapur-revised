@@ -95,6 +95,31 @@ export default async function handler(
        * confirmed by Treasury.
        */
       try {
+
+        const dataFromServer = await fetch(
+          `${process.env.BOOK_SERVER_URL}/transactions/reference/${referenceId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!dataFromServer.ok) {
+          throw new Error(
+            `Failed to fetch transaction data from book server. Status: ${dataFromServer.status}`
+          );
+        }
+
+        const transactionData =
+          await dataFromServer.json();
+
+        console.log(
+          "Fetched transaction data from book server:",
+          transactionData
+        );
+
         if (!process.env.RESEND_API_KEY) {
           throw new Error(
             "RESEND_API_KEY is not configured"
@@ -113,26 +138,18 @@ export default async function handler(
           );
         }
 
-        const customerName = [
-          decrypted.first_name,
-          decrypted.middle_name,
-          decrypted.last_name,
-        ]
-          .filter(Boolean)
-          .join(" ")
-          .trim();
+        const customerName = transactionData.name || "";
 
         const customerEmail =
-          decrypted.email ||
+          transactionData.email ||
           "";
 
         const customerMobile =
-          decrypted.mobile ||
+          transactionData.mobile ||
           "";
 
         const customerAddress = [
-          decrypted.address_1,
-          decrypted.address_2,
+          transactionData.address,
           decrypted.post_office,
           decrypted.city,
           decrypted.district,

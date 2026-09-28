@@ -628,6 +628,7 @@ function CheckoutModal({
         );
       }
 
+     
       const response = await fetch("/api/payment/initiate", {
         method: "POST",
         headers: {

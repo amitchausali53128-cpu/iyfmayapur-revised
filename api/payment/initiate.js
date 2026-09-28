@@ -175,6 +175,41 @@ export default function handler(request, response) {
       amount: payload.amount,
     });
 
+    const bookServerUrl = process.env.BOOK_SERVER_URL || "http://localhost:3000";
+
+    fetch(`${bookServerUrl}/transactions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        reference_id: referenceId,
+        payment_type: isStorePayment
+          ? "store"
+          : isLmsPayment
+            ? "lms"
+            : "donation",
+        amount: payload.amount,
+        name: payload.first_name + " " + payload.middle_name + " " + payload.last_name,
+        email: payload.email,
+        mobile: payload.mobile,
+        address: payload.address_1 + ", " + payload.address_2,
+        post_office: payload.post_office,
+        pin_code: payload.pin_code,
+        district: payload.district,
+        city: payload.city,
+        state: payload.state,
+        country: payload.country,
+        transaction_purpose:
+          payload.transaction_purpose,
+      }),
+    }).catch((err) => {
+      console.error(
+        "Error recording payment initiation:",
+        err
+      );
+    });
+
     return response.status(200).json({
       reference_id: referenceId,
       payment_url: paymentUrl,
