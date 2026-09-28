@@ -21,7 +21,7 @@ const required = [
   "country",
 ];
 
-export default function handler(request, response) {
+export default async function handler(request, response) {
   if (request.method !== "POST") {
     return response.status(405).json({
       error: "Method not allowed",
@@ -175,45 +175,65 @@ export default function handler(request, response) {
       amount: payload.amount,
     });
 
-    const bookServerUrl = process.env.BOOK_SERVER_URL || "http://localhost:3000";
+    const bookServerUrl =
+  process.env.BOOK_SERVER_URL ||
+  "http://localhost:3000";
 
-    fetch(`${bookServerUrl}/transactions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        reference_id: referenceId,
-        payment_type: isStorePayment
-          ? "store"
-          : isLmsPayment
-            ? "lms"
-            : "donation",
-        amount: payload.amount,
-        name: payload.first_name + " " + payload.middle_name + " " + payload.last_name,
-        email: payload.email,
-        mobile: payload.mobile,
-        address: payload.address_1 + ", " + payload.address_2,
-        post_office: payload.post_office,
-        pin_code: payload.pin_code,
-        district: payload.district,
-        city: payload.city,
-        state: payload.state,
-        country: payload.country,
-        transaction_purpose:
-          payload.transaction_purpose,
-      }),
-    }).catch((err) => {
-      console.error(
-        "Error recording payment initiation:",
-        err
-      );
-    });
-
-    return response.status(200).json({
+const transactionResponse = await fetch(
+  `${bookServerUrl}/transactions/`,
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
       reference_id: referenceId,
-      payment_url: paymentUrl,
-    });
+      payment_type: isStorePayment
+        ? "store"
+        : isLmsPayment
+          ? "lms"
+          : "donation",
+      amount: payload.amount,
+      name:
+        `${payload.first_name} ` +
+        `${payload.middle_name} ` +
+        `${payload.last_name}`.trim(),
+      email: payload.email,
+      mobile: payload.mobile,
+      address:
+        `${payload.address_1}, ${payload.address_2}`.trim(),
+      post_office: payload.post_office,
+      pin_code: payload.pin_code,
+      district: payload.district,
+      city: payload.city,
+      state: payload.state,
+      country: payload.country,
+      transaction_purpose:
+        payload.transaction_purpose,
+    }),
+  }
+);
+
+if (!transactionResponse.ok) {
+  const errorText =
+    await transactionResponse.text();
+
+  console.error(
+    "Failed to create payment transaction:",
+    transactionResponse.status,
+    errorText
+  );
+
+  return response.status(500).json({
+    error: "Unable to create payment transaction.",
+  });
+}
+
+return response.status(200).json({
+  reference_id: referenceId,
+  payment_url: paymentUrl,
+});
+
   } catch (error) {
     console.error(
       "Payment initiation error:",
