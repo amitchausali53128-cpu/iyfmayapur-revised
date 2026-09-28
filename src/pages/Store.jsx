@@ -594,6 +594,7 @@ function CheckoutModal({
     country: "India",
   });
 
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -636,6 +637,7 @@ function CheckoutModal({
         },
         body: JSON.stringify({
           ...form,
+          cart,
           payment_type: "store",
           amount: total,
           transaction_purpose: "Book Purchase",

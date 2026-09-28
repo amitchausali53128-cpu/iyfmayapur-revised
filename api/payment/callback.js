@@ -148,17 +148,7 @@ export default async function handler(
           transactionData.mobile ||
           "";
 
-        const customerAddress = [
-          transactionData.address,
-          decrypted.post_office,
-          decrypted.city,
-          decrypted.district,
-          decrypted.state,
-          decrypted.pin_code,
-          decrypted.country,
-        ]
-          .filter(Boolean)
-          .join(", ");
+        const customerAddress =transactionData.address || "";
 
         await resend.emails.send({
           from:
@@ -178,6 +168,16 @@ export default async function handler(
                 A new book purchase has been successfully
                 completed.
               </p>
+              <h3>Books</h3>
+              <ul>
+                ${transactionData.books
+                  .map(
+                    (book) =>
+                      `<li>${book.book_name} - ${book.book_format} - Quantity: ${book.book_quantity} - Price: INR ${book.book_price}</li>`
+                  )
+                  .join("")}
+              </ul>
+
 
               <h3>Payment Details</h3>
 

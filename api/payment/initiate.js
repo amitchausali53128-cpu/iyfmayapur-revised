@@ -179,6 +179,14 @@ export default async function handler(request, response) {
   process.env.BOOK_SERVER_URL ||
   "http://localhost:3000";
 
+  const books = (JSON.parse(input.cart) || []).map((book) => ({
+    id: book.id,
+    book_quantity: book.qty,
+    book_name: book.title,
+    book_price: book.price,
+    book_format: book.format,
+  }));
+
 const transactionResponse = await fetch(
   `${bookServerUrl}/transactions/`,
   {
@@ -201,13 +209,8 @@ const transactionResponse = await fetch(
       email: payload.email,
       mobile: payload.mobile,
       address:
-        `${payload.address_1}, ${payload.address_2}`.trim(),
-      post_office: payload.post_office,
-      pin_code: payload.pin_code,
-      district: payload.district,
-      city: payload.city,
-      state: payload.state,
-      country: payload.country,
+        `${payload.address_1}, ${payload.address_2}, ${payload.city}, ${payload.pin_code}, ${payload.district}, ${payload.state}, ${payload.country}`.trim(),
+      books,
       transaction_purpose:
         payload.transaction_purpose,
     }),
