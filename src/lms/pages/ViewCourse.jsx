@@ -466,221 +466,223 @@ export default function ViewCourse() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen pt-10 pb-16">
-      <div className="relative bg-gradient-to-r from-slate-900 to-indigo-950 text-white py-16 px-4 md:px-8 overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl"></div>
+    <div className="bg-[#faf8f3] min-h-screen pt-10 pb-16">
+  <div className="relative bg-gradient-to-r from-[#143d2d] to-[#1f5d42] text-white py-16 px-4 md:px-8 overflow-hidden">
+    <div className="absolute top-0 right-0 w-96 h-96 bg-[#f59e0b]/10 rounded-full blur-3xl"></div>
+    <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#f59e0b]/10 rounded-full blur-3xl"></div>
 
-        <div className="max-w-7xl mx-auto relative z-10 grid md:grid-cols-3 gap-8 items-center">
-          <div className="md:col-span-2">
-            <span className="bg-amber-500/20 text-amber-400 text-sm font-semibold tracking-wider uppercase px-3 py-1 rounded-full border border-amber-500/30">
-              {course.category} Course
-            </span>
+    <div className="max-w-7xl mx-auto relative z-10 grid md:grid-cols-3 gap-8 items-center">
+      <div className="md:col-span-2">
+        <span className="bg-[#f59e0b]/15 text-[#fbbf24] text-sm font-semibold tracking-wider uppercase px-3 py-1 rounded-full border border-[#f59e0b]/30">
+          {course.category} Course
+        </span>
 
-            <h1 className="text-3xl md:text-5xl font-bold font-serif mt-4 text-white leading-tight">
-              {course.title}
-            </h1>
+        <h1 className="text-3xl md:text-5xl font-bold font-serif mt-4 text-white leading-tight">
+          {course.title}
+        </h1>
 
-            <p className="text-lg text-slate-300 mt-4 leading-relaxed max-w-3xl">
-              {course.description}
-            </p>
+        <p className="text-lg text-white/75 mt-4 leading-relaxed max-w-3xl">
+          {course.description}
+        </p>
 
-            <div className="flex flex-wrap items-center gap-6 mt-8 text-sm text-slate-300">
-              <span className="flex items-center gap-2">
-                <FaGraduationCap className="text-amber-400 text-lg" />
-                <span>{course.level} Level</span>
-              </span>
+        <div className="flex flex-wrap items-center gap-6 mt-8 text-sm text-white/75">
+          <span className="flex items-center gap-2">
+            <FaGraduationCap className="text-[#f59e0b] text-lg" />
+            <span>{course.level} Level</span>
+          </span>
 
-              <span className="flex items-center gap-2">
-                <FaClock className="text-amber-400 text-lg" />
-                <span>{course.duration} Duration</span>
-              </span>
+          <span className="flex items-center gap-2">
+            <FaClock className="text-[#f59e0b] text-lg" />
+            <span>{course.duration} Duration</span>
+          </span>
 
-              <span className="flex items-center gap-2">
-                <FaBookOpen className="text-amber-400 text-lg" />
-                <span>{totalLessons} Lessons</span>
-              </span>
-            </div>
-          </div>
+          <span className="flex items-center gap-2">
+            <FaBookOpen className="text-[#f59e0b] text-lg" />
+            <span>{totalLessons} Lessons</span>
+          </span>
         </div>
       </div>
+    </div>
+  </div>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 mt-12 grid md:grid-cols-3 gap-8">
-        <div className="md:col-span-2 space-y-8">
-          <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-100 shadow-sm">
-            <h2 className="text-2xl font-bold text-slate-900 font-serif mb-4 pb-2 border-b border-gray-100">
-              About this Course
-            </h2>
+  <div className="max-w-7xl mx-auto px-4 md:px-8 mt-12 grid md:grid-cols-3 gap-8">
+    <div className="md:col-span-2 space-y-8">
 
-            <p className="text-gray-600 leading-relaxed whitespace-pre-line text-justify">
-              {course.longDescription ||
-                course.description}
-            </p>
-          </div>
+      <div className="bg-white p-6 md:p-8 rounded-2xl border border-[#e7eee9] shadow-sm">
+        <h2 className="text-2xl font-bold text-[#1f5d42] font-serif mb-4 pb-2 border-b border-[#e7eee9]">
+          About this Course
+        </h2>
 
-          <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-100 shadow-sm">
-            <h2 className="text-2xl font-bold text-slate-900 font-serif mb-6 pb-2 border-b border-gray-100">
-              Course Syllabus
-            </h2>
+        <p className="text-[#587064] leading-relaxed whitespace-pre-line text-justify">
+          {course.longDescription ||
+            course.description}
+        </p>
+      </div>
 
-            {course.modules &&
-            course.modules.length > 0 ? (
-              <div className="space-y-4">
-                {course.modules.map((mod, idx) => {
-                  const isExpanded =
-                    expandedModule === mod._id ||
-                    (expandedModule === null &&
-                      idx === 0);
+      <div className="bg-white p-6 md:p-8 rounded-2xl border border-[#e7eee9] shadow-sm">
+        <h2 className="text-2xl font-bold text-[#1f5d42] font-serif mb-6 pb-2 border-b border-[#e7eee9]">
+          Course Syllabus
+        </h2>
 
-                  return (
-                    <div
-                      key={mod._id}
-                      className="border border-slate-100 rounded-xl overflow-hidden shadow-xs"
-                    >
-                      <button
-                        onClick={() =>
-                          toggleModule(mod._id)
-                        }
-                        className="w-full flex items-center justify-between p-4 bg-slate-50 hover:bg-slate-100/80 transition text-left"
-                      >
-                        <div>
-                          <h3 className="font-semibold text-slate-800 text-base md:text-lg">
-                            {mod.title}
-                          </h3>
+        {course.modules &&
+        course.modules.length > 0 ? (
+          <div className="space-y-4">
+            {course.modules.map((mod, idx) => {
+              const isExpanded =
+                expandedModule === mod._id ||
+                (expandedModule === null &&
+                  idx === 0);
 
-                          <span className="text-xs text-slate-500 mt-1 block">
-                            {mod.lessons?.length || 0}{" "}
-                            Lessons
-                          </span>
-                        </div>
+              return (
+                <div
+                  key={mod._id}
+                  className="border border-[#e7eee9] rounded-xl overflow-hidden shadow-xs"
+                >
+                  <button
+                    onClick={() =>
+                      toggleModule(mod._id)
+                    }
+                    className="w-full flex items-center justify-between p-4 bg-[#f3f7f4] hover:bg-[#eaf2ed] transition text-left"
+                  >
+                    <div>
+                      <h3 className="font-semibold text-[#234d3a] text-base md:text-lg">
+                        {mod.title}
+                      </h3>
 
-                        {isExpanded ? (
-                          <FaChevronUp className="text-slate-500" />
-                        ) : (
-                          <FaChevronDown className="text-slate-500" />
-                        )}
-                      </button>
-
-                      {isExpanded && (
-                        <div className="divide-y divide-slate-100 bg-white">
-                          {mod.lessons &&
-                            mod.lessons.map(
-                              (lesson) => (
-                                <div
-                                  key={lesson._id}
-                                  className="p-4 flex items-center justify-between hover:bg-slate-50/50 transition"
-                                >
-                                  <div className="flex items-center gap-3">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-
-                                    <span className="text-sm font-medium text-slate-700">
-                                      {lesson.title}
-                                    </span>
-                                  </div>
-
-                                  <span className="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
-                                    {lesson.duration}
-                                  </span>
-                                </div>
-                              )
-                            )}
-                        </div>
-                      )}
+                      <span className="text-xs text-[#718278] mt-1 block">
+                        {mod.lessons?.length || 0}{" "}
+                        Lessons
+                      </span>
                     </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <p className="text-gray-500">
-                No modules listed for this course yet.
-              </p>
-            )}
+
+                    {isExpanded ? (
+                      <FaChevronUp className="text-[#587064]" />
+                    ) : (
+                      <FaChevronDown className="text-[#587064]" />
+                    )}
+                  </button>
+
+                  {isExpanded && (
+                    <div className="divide-y divide-[#e7eee9] bg-white">
+                      {mod.lessons &&
+                        mod.lessons.map(
+                          (lesson) => (
+                            <div
+                              key={lesson._id}
+                              className="p-4 flex items-center justify-between hover:bg-[#f8faf8] transition"
+                            >
+                              <div className="flex items-center gap-3">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]"></span>
+
+                                <span className="text-sm font-medium text-[#3f5f50]">
+                                  {lesson.title}
+                                </span>
+                              </div>
+
+                              <span className="text-xs text-[#718278] bg-[#f3f7f4] px-2 py-0.5 rounded-full">
+                                {lesson.duration}
+                              </span>
+                            </div>
+                          )
+                        )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
+        ) : (
+          <p className="text-[#718278]">
+            No modules listed for this course yet.
+          </p>
+        )}
+      </div>
+    </div>
+
+    <div className="md:col-span-1">
+      <div className="bg-white rounded-2xl border border-[#e7eee9] shadow-lg overflow-hidden sticky top-24">
+
+        <div className="relative w-full bg-[#143d2d] flex items-center justify-center overflow-hidden">
+          <img
+            src={course.imgUrl}
+            alt={course.title}
+            className="w-full h-full object-cover opacity-90"
+          />
+
+          <div className="absolute inset-0 bg-gradient-to-t from-[#143d2d]/70 to-transparent"></div>
         </div>
 
-        <div className="md:col-span-1">
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden sticky top-24">
-            <div className="relative w-full bg-slate-900 flex items-center justify-center overflow-hidden">
-              <img
-                src={course.imgUrl}
-                alt={course.title}
-                className="w-full h-full object-cover opacity-90"
-              />
+        <div className="p-6">
+          <div className="flex items-baseline justify-between mb-6">
+            <span className="text-sm text-[#718278] font-semibold uppercase tracking-wider">
+              Price
+            </span>
 
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent"></div>
+            <span className="text-3xl font-extrabold text-[#1f5d42]">
+              Rs. {course.price}
+            </span>
+          </div>
+
+          {isEnrolled ? (
+            <button
+              onClick={() =>
+                navigate(
+                  `/player/${course._id}`
+                )
+              }
+              className="w-full bg-[#1f5d42] hover:bg-[#174a34] text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all duration-200 transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <FaGraduationCap className="text-xl" />
+              Resume Learning
+            </button>
+          ) : (
+            <button
+              onClick={handleEnrollment}
+              disabled={checkoutLoading}
+              className="w-full bg-[#f59e0b] hover:bg-[#d97706] text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all duration-200 transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {checkoutLoading
+                ? "Opening Checkout..."
+                : "Enroll Now"}
+            </button>
+          )}
+
+          <div className="mt-8 space-y-4 border-t border-[#e7eee9] pt-6">
+            <h4 className="font-semibold text-[#234d3a] text-sm uppercase tracking-wider">
+              This Course Includes:
+            </h4>
+
+            <div className="flex items-start gap-3 text-sm text-[#587064]">
+              <FaClock className="text-[#f59e0b] mt-0.5 shrink-0" />
+
+              <span>
+                {course.duration} of lessons video
+                instruction
+              </span>
             </div>
 
-            <div className="p-6">
-              <div className="flex items-baseline justify-between mb-6">
-                <span className="text-sm text-slate-500 font-semibold uppercase tracking-wider">
-                  Price
-                </span>
+            <div className="flex items-start gap-3 text-sm text-[#587064]">
+              <FaBookOpen className="text-[#f59e0b] mt-0.5 shrink-0" />
 
-                <span className="text-3xl font-extrabold text-slate-900">
-                  Rs. {course.price}
-                </span>
-              </div>
+              <span>
+                {totalLessons} lessons with
+                downloadable resources
+              </span>
+            </div>
 
-              {isEnrolled ? (
-                <button
-                  onClick={() =>
-                    navigate(
-                      `/player/${course._id}`
-                    )
-                  }
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all duration-200 transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <FaGraduationCap className="text-xl" />
-                  Resume Learning
-                </button>
-              ) : (
-                <button
-                  onClick={handleEnrollment}
-                  disabled={checkoutLoading}
-                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all duration-200 transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {checkoutLoading
-                    ? "Opening Checkout..."
-                    : "Enroll Now"}
-                </button>
-              )}
+            <div className="flex items-start gap-3 text-sm text-[#587064]">
+              <FaAward className="text-[#f59e0b] mt-0.5 shrink-0" />
 
-              <div className="mt-8 space-y-4 border-t border-slate-100 pt-6">
-                <h4 className="font-semibold text-slate-800 text-sm uppercase tracking-wider">
-                  This Course Includes:
-                </h4>
-
-                <div className="flex items-start gap-3 text-sm text-slate-600">
-                  <FaClock className="text-indigo-500 mt-0.5 shrink-0" />
-
-                  <span>
-                    {course.duration} of lessons video
-                    instruction
-                  </span>
-                </div>
-
-                <div className="flex items-start gap-3 text-sm text-slate-600">
-                  <FaBookOpen className="text-indigo-500 mt-0.5 shrink-0" />
-
-                  <span>
-                    {totalLessons} lessons with
-                    downloadable resources
-                  </span>
-                </div>
-
-                <div className="flex items-start gap-3 text-sm text-slate-600">
-                  <FaAward className="text-indigo-500 mt-0.5 shrink-0" />
-
-                  <span>
-                    Official completion certificate
-                    from IYF Mayapur
-                  </span>
-                </div>
-              </div>
+              <span>
+                Official completion certificate
+                from IYF Mayapur
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
   );
 }
