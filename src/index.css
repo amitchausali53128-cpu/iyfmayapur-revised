@@ -482,15 +482,35 @@
 .home-intro__frame:hover img { transform: scale(1.035); }
 
 .home-quote-wrap {
+  position: relative;
+  overflow: hidden;
   padding-block: clamp(70px, 8vw, 110px);
-  color: #bbb803;
+  color: #2d241d;
   background:
-    radial-gradient(circle at 15% 10%, rgba(220, 164, 63, 0.2), transparent 26rem),
-    radial-gradient(circle at 88% 80%, rgba(220, 164, 63, 0.12), transparent 24rem),
-    #063850;
+    radial-gradient(circle at 8% 18%, rgba(213, 165, 70, 0.24), transparent 25rem),
+    radial-gradient(circle at 92% 82%, rgba(226, 181, 91, 0.2), transparent 28rem),
+    linear-gradient(135deg, #fffaf0 0%, #f4e6cd 52%, #fffaf2 100%);
+  border-block: 1px solid rgba(176, 132, 48, 0.18);
+}
+
+.home-quote-wrap::before {
+  content: "";
+  position: absolute;
+  top: -120px;
+  right: 8%;
+  width: 280px;
+  height: 280px;
+  border: 1px solid rgba(189, 142, 42, 0.16);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 24px rgba(189, 142, 42, 0.045),
+    0 0 0 48px rgba(189, 142, 42, 0.035);
+  pointer-events: none;
 }
 
 .home-quote {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 0.8fr 1.2fr;
   align-items: center;
@@ -509,6 +529,8 @@
   letter-spacing: -0.045em;
 }
 
+.home-quote__heading h2 { color: #3b2a1e; }
+
 .home-quote__heading .home-title-rule,
 .home-gallery__heading .home-title-rule { margin-top: 30px; }
 
@@ -516,7 +538,7 @@
   position: absolute;
   top: -105px;
   left: -20px;
-  color: rgba(224, 174, 79, 0.16);
+  color: rgba(189, 142, 42, 0.2);
   font-family: Georgia, serif;
   font-size: 190px;
   line-height: 1;
@@ -527,9 +549,12 @@
   overflow: hidden;
   max-width: 620px;
   margin-left: auto;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #f8edda;
+  border: 1px solid rgba(154, 112, 45, 0.28);
   border-radius: 4px 76px 4px 76px;
-  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.35);
+  box-shadow:
+    14px 14px 0 rgba(215, 179, 111, 0.32),
+    0 25px 60px rgba(91, 61, 25, 0.18);
 }
 
 .home-quote__image-wrap::after {
@@ -537,7 +562,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  box-shadow: inset 0 0 0 12px rgba(255, 255, 255, 0.055);
+  box-shadow: inset 0 0 0 12px rgba(255, 250, 239, 0.2);
 }
 
 .home-quote__image-wrap img {

@@ -5,10 +5,10 @@ import centerImage from "../../assets/OurBase/Img1.jpg";
 const centers = [
   { name: "Mayapur Base", location: "NIT Durgapur", image: centerImage },
   { name: "Shantipur Base", location: "NIT Silchar", image: centerImage },
-  { name: "Jagannath Base", location: "Bolpur", image: centerImage },
+  { name: "Bolpur Shantiniketan Base", location: "Bolpur", image: centerImage },
   { name: "Brihad Mrdanga Base", location: "Bardhaman", image: centerImage },
-  { name: "Koladwipa Base", location: "IIIT Kalyani", image: centerImage },
   { name: "Simantadwipa Base", location: "Phuljohor, BCREC", image: centerImage },
+  { name: "Koladwipa Base", location: "IIIT Kalyani", image: centerImage },
 ];
 
 const decorations = [

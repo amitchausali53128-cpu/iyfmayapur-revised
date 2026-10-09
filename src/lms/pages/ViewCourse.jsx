@@ -627,7 +627,7 @@ export default function ViewCourse() {
             <button
               onClick={() =>
                 navigate(
-                  `/player/${course._id}`
+                  `/lms/player/${course._id}`
                 )
               }
               className="w-full bg-[#1f5d42] hover:bg-[#174a34] text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all duration-200 transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2 cursor-pointer"

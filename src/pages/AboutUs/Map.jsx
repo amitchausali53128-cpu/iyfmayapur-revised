@@ -3,12 +3,12 @@ import centerImage from '/sample.jpg'
 import './map.css'
 
 const centers = [
-    { name: 'Mayapur Campus', place: 'Sridham Mayapur', address: 'BACE Campus, Mayapur, Nadia, West Bengal', contact: '+91 90070 10001', position: 'map-marker--mayapur', crop: 'center' },
-    { name: 'Kolkata Hub', place: 'Kolkata', address: 'Salt Lake, Kolkata, West Bengal', contact: '+91 90070 10002', position: 'map-marker--kolkata', crop: '35% center' },
-    { name: 'Nadia Zone', place: 'Nadia', address: 'Nabadwip Road, Nadia, West Bengal', contact: '+91 90070 10003', position: 'map-marker--nadia', crop: '65% center' },
-    { name: 'Prerna Zone', place: 'West Bengal', address: 'Prerna Community Hall, West Bengal', contact: '+91 90070 10004', position: 'map-marker--prerna', crop: '20% center' },
-    { name: 'Students Centre', place: 'Kalyani', address: 'University Area, Kalyani, West Bengal', contact: '+91 90070 10005', position: 'map-marker--students', crop: '80% center' },
-    { name: 'Vedic Centre', place: 'Krishnanagar', address: 'College Road, Krishnanagar, West Bengal', contact: '+91 90070 10006', position: 'map-marker--vedic', crop: '50% center' },
+    { name: 'Mayapur Base', place: 'NIT Durgapur', address: 'NIT Durgapur, West Bengal', contact: '+91 70475 82554', position: 'map-marker--mayapur', crop: 'center' },
+    { name: 'Shantipur Base', place: 'NIT Silchar', address: 'NIT Silchar, Assam', contact: '+91 75868 70952', position: 'map-marker--kolkata', crop: '35% center' },
+    { name: 'Bolpur Shantiniketan Base', place: 'Bolpur', address: 'Bolpur, West Bengal', contact: '+91 70470 51551', position: 'map-marker--nadia', crop: '65% center' },
+    { name: 'Brihad Mrdanga Base', place: 'Bardhaman', address: 'Bardhaman, West Bengal', contact: '+91 70475 82554', position: 'map-marker--prerna', crop: '20% center' },
+    { name: 'Simantadwipa Base', place: 'Phuljohor, BCREC', address: 'Phuljohor, BCREC, West Bengal', contact: '+91 70475 82554', position: 'map-marker--students', crop: '80% center' },
+    { name: 'Koladwipa Base', place: 'IIIT Kalyani', address: 'IIIT Kalyani, West Bengal', contact: '+91 78119 04445', position: 'map-marker--vedic', crop: '50% center' },
 ]
 
 export default function Map() {

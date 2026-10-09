@@ -92,6 +92,30 @@ export default function Footer() {
               </span>
               Main Site
             </a>
+            <Link
+              to="/legal/privacy-policy"
+              className="text-[#c8d5ce] transition-colors duration-200 hover:text-[#fbbf24]"
+            >
+              Privacy
+            </Link>
+            <Link
+              to="/legal/terms-of-service"
+              className="text-[#c8d5ce] transition-colors duration-200 hover:text-[#fbbf24]"
+            >
+              Terms
+            </Link>
+            <Link
+              to="/legal/refund-cancellation"
+              className="text-[#c8d5ce] transition-colors duration-200 hover:text-[#fbbf24]"
+            >
+              Refunds
+            </Link>
+            <Link
+              to="/legal/shipping-delivery"
+              className="text-[#c8d5ce] transition-colors duration-200 hover:text-[#fbbf24]"
+            >
+              Shipping
+            </Link>
           </nav>
 
           {/* Copyright */}

@@ -197,7 +197,20 @@ const Footer = () => (
           Made with <FaHeart className="text-[#f59e0b]" /> for the youth
         </p>
 
-        <p>All Rights Reserved</p>
+        <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-right">
+          <NavLink to="/legal/privacy-policy" className="transition hover:text-white">
+            Privacy
+          </NavLink>
+          <NavLink to="/legal/terms-of-service" className="transition hover:text-white">
+            Terms
+          </NavLink>
+          <NavLink to="/legal/refund-cancellation" className="transition hover:text-white">
+            Refunds
+          </NavLink>
+          <NavLink to="/legal/shipping-delivery" className="transition hover:text-white">
+            Shipping
+          </NavLink>
+        </div>
       </div>
     </div>
   </footer>

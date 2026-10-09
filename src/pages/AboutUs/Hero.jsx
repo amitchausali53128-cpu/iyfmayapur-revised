@@ -1,5 +1,15 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import { cloudinaryAsset } from "../../lib/cloudinary";
+
+const youthImageNumbers = [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+
+const galleryImages = [
+  ...Array.from({ length: 34 }, (_, index) => `/gallery/G${index + 1}.jpeg`),
+  "/home/youth.jpg",
+  ...youthImageNumbers.map((number) => `/home/youth${number}.jpeg`),
+  ...Array.from({ length: 12 }, (_, index) => `/life/img${index}.jpg`),
+].map((image) => cloudinaryAsset(image, { width: 900, crop: "limit" }));
 
 // ============================================================
 // ANIMATION VARIANTS
@@ -375,7 +385,7 @@ function MobileBranding() {
 // MOBILE CAROUSEL
 // ============================================================
 
-function MobileCarousel({ sampleImg }) {
+function MobileCarousel({ images }) {
   const [current, setCurrent] = useState(0);
 
   const slides = [
@@ -384,27 +394,27 @@ function MobileCarousel({ sampleImg }) {
     },
     {
       type: "image",
-      image: sampleImg,
+      image: images[0],
     },
     {
       type: "image",
-      image: sampleImg,
+      image: images[1],
     },
     {
       type: "image",
-      image: sampleImg,
+      image: images[2],
     },
     {
       type: "image",
-      image: sampleImg,
+      image: images[3],
     },
     {
       type: "image",
-      image: sampleImg,
+      image: images[4],
     },
     {
       type: "image",
-      image: sampleImg,
+      image: images[5],
     },
   ];
 
@@ -889,7 +899,11 @@ function DesktopBranding() {
 // ============================================================
 
 export default function Hero() {
-  const sampleImg = "/src/assets/image.png";
+  const [heroImages] = useState(() =>
+    [...galleryImages]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 6)
+  );
 
   const centers = [
     {
@@ -976,7 +990,7 @@ export default function Hero() {
             mx-auto
           "
         >
-          <MobileCarousel sampleImg={sampleImg} />
+          <MobileCarousel images={heroImages} />
         </div>
       </section>
 
@@ -1132,7 +1146,7 @@ export default function Hero() {
           {/* Top left */}
 
           <HeroTile
-            image={sampleImg}
+            image={heroImages[0]}
             animation={tileAnimations[0]}
             delay={0.05}
             className={`
@@ -1145,7 +1159,7 @@ export default function Hero() {
           {/* Top center */}
 
           <HeroTile
-            image={sampleImg}
+            image={heroImages[1]}
             animation={tileAnimations[1]}
             delay={0.15}
             className={`
@@ -1158,7 +1172,7 @@ export default function Hero() {
           {/* Top right */}
 
           <HeroTile
-            image={sampleImg}
+            image={heroImages[2]}
             animation={tileAnimations[2]}
             delay={0.25}
             className={`
@@ -1175,7 +1189,7 @@ export default function Hero() {
           {/* Bottom left */}
 
           <HeroTile
-            image={sampleImg}
+            image={heroImages[3]}
             animation={tileAnimations[3]}
             delay={0.35}
             className={`
@@ -1188,7 +1202,7 @@ export default function Hero() {
           {/* Bottom center */}
 
           <HeroTile
-            image={sampleImg}
+            image={heroImages[4]}
             animation={tileAnimations[4]}
             delay={0.45}
             className={`
@@ -1201,7 +1215,7 @@ export default function Hero() {
           {/* Bottom right */}
 
           <HeroTile
-            image={sampleImg}
+            image={heroImages[5]}
             animation={tileAnimations[5]}
             delay={0.55}
             className={`

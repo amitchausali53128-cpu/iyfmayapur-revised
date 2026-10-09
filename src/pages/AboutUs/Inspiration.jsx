@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import image from "/inspiration-removebg.png";
 import image2 from "/jps.png";
 
 export default function Inspiration() {
@@ -22,7 +21,10 @@ export default function Inspiration() {
   ];
 
   return (
-    <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden bg-[#FFFDF9] px-6 py-16 md:py-24">
+    <section
+      className="relative flex min-h-[70vh] items-center justify-center overflow-hidden bg-[#FFFDF9] bg-contain bg-right bg-no-repeat px-6 py-16 md:py-24"
+      style={{ backgroundImage: "url('/prabhupada2.jpg')" }}
+    >
 
       {/* ================= BACKGROUND DECORATION ================= */}
 
@@ -104,22 +106,6 @@ export default function Inspiration() {
         </motion.div>
       ))}
 
-      {/* ================= BACKGROUND IMAGE ================= */}
-
-      <motion.div
-        className="pointer-events-none absolute left-1/2 top-1/2 z-[1] h-[75%] w-[75%] -translate-x-1/2 -translate-y-1/2 bg-contain bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url(${image})`,
-          filter:
-            "drop-shadow(0 0 18px rgba(255,255,255,0.95)) drop-shadow(0 0 45px rgba(255,255,255,0.8)) drop-shadow(0 20px 45px rgba(180,120,20,0.12))",
-        }}
-        animate={{ y: [0, -7, 0], scale: [1, 1.015, 1] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-      />
-
-      {/* White image aura */}
-      <div className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[65%] w-[65%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/70 blur-[80px]" />
-
       {/* ================= MAIN CONTENT ================= */}
 
       <div className="relative z-10 flex w-full max-w-6xl flex-col items-center justify-center gap-8 md:flex-row md:gap-20 lg:gap-32">
@@ -133,12 +119,12 @@ export default function Inspiration() {
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           className="relative z-10 text-center md:text-left"
         >
-          <div className="mb-5 flex items-center justify-center gap-3 md:justify-start">
-            <span className="h-[1px] w-10 bg-amber-500/60" />
+          <div className="mb-5 flex max-w-2xl items-start justify-center gap-3 text-left md:justify-start">
+            <span className="mt-2 h-[1px] w-10 shrink-0 bg-amber-500/60" />
             <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-amber-700">
               Our Inspiration
             </span>
-            <span className="h-[1px] w-10 bg-amber-500/60 md:hidden" />
+            <span className="mt-2 h-[1px] w-10 shrink-0 bg-amber-500/60 md:hidden" />
           </div>
 
           <h2 className="relative font-serif text-5xl leading-[0.95] text-stone-900 sm:text-6xl md:text-7xl lg:text-8xl">
@@ -150,8 +136,11 @@ export default function Inspiration() {
             </span>
           </h2>
 
-          <p className="mx-auto mt-5 max-w-xl text-sm leading-6 text-stone-600/80 sm:text-base md:mx-0">
-            Where devotion becomes inspiration, and every step leads closer to the Divine.
+          <p className="mx-auto mt-5 max-w-xl border-l-2 border-amber-400/60 pl-4 font-serif text-sm italic leading-6 text-amber-800/90 sm:text-base md:mx-0">
+            “You are the young generation; you are the flower of your country
+            and society. Practice this most sublime system, Krsna
+            consciousness. Be happy and make others happy. This is the real
+            mission of life.”
           </p>
 
           <div className="mt-7 flex items-center justify-center gap-3 md:justify-start">
@@ -170,20 +159,15 @@ export default function Inspiration() {
           transition={{ duration: 1.2, ease: "easeOut" }}
           className="relative h-[260px] w-full md:h-[360px] md:w-[420px] lg:h-[450px] lg:w-[500px]"
         >
-          {/* Image backlight */}
           <div className="absolute inset-0 rounded-full bg-amber-300/20 blur-[80px]" />
 
-          {/* Decorative ring */}
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
             className="absolute left-1/2 top-1/2 h-[90%] w-[90%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-amber-300/30"
           />
 
-          {/* Inner glow */}
-          <div className="absolute left-1/2 top-1/2 h-[65%] w-[65%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-yellow-100/40 blur-3xl" />
-
-          {/* ================= JPS IMAGE ================= */}
+          <div className="absolute left-1/2 top-1/2 h-[65%] w-[65%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-yellow-100/40 blur-3xl md:left-[4%] md:top-[54%] lg:top-[56%]" />
 
           <motion.img
             src={image2}
@@ -197,7 +181,13 @@ export default function Inspiration() {
               delay: 0.15,
             }}
             animate={{ y: [0, -5, 0] }}
-            className="absolute left-1/2 top-1/2 z-10 h-[88%] w-[88%] -translate-x-1/2 -translate-y-1/2 object-contain drop-shadow-[0_20px_35px_rgba(180,120,20,0.15)]"
+            className="absolute left-1/2 top-1/2 z-10 h-[105%] w-[105%] -translate-x-1/2 -translate-y-1/2 object-contain drop-shadow-[0_20px_35px_rgba(180,120,20,0.15)] md:left-[4%] md:top-[54%] md:h-[88%] md:w-[88%] lg:top-[66%]"
+            style={{
+              maskImage:
+                "linear-gradient(to bottom, black 0%, black 82%, transparent 100%)",
+              WebkitMaskImage:
+                "linear-gradient(to bottom, black 0%, black 82%, transparent 100%)",
+            }}
           />
         </motion.div>
       </div>

@@ -686,15 +686,13 @@ export default function Store() {
       <section className="grid justify-items-center gap-3.5 bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.2),transparent_55%),linear-gradient(180deg,#0b2218,#06150e)] px-6 py-28 text-center text-white">
         <div className="text-2xl text-amber-500">✦</div>
         <p className="text-xs uppercase tracking-[0.28em] text-amber-500">
-          Knowledge becomes wisdom when we live it.
+          HARE KRISHNA
         </p>
         <h2 className={`${serif} text-4xl font-light leading-tight md:text-6xl`}>
-          Let a good book
-          <br />
-          become a good beginning.
+         I will never die, I shall live for my books, and you will utilize
         </h2>
         <span className="mt-4 text-3xl text-white/80" style={{ fontFamily: "Caveat, cursive" }}>
-          Hare Krishna
+           - Śrīla Prabhupāda
         </span>
       </section>
 
