@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   FiArrowRight,
@@ -5,9 +6,56 @@ import {
   FiShoppingBag,
 } from "react-icons/fi";
 
+const decodePaymentToken = (token) => {
+  if (!token) return "";
+
+  try {
+    const payload = token.split(".")[0];
+    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const decoded = atob(base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), "="));
+    return JSON.parse(decoded).reference_id || "";
+  } catch {
+    return "";
+  }
+};
+
 export default function StoreThankYou() {
   const [searchParams] = useSearchParams();
-  const referenceId = searchParams.get("reference_id");
+  const referenceId =
+    searchParams.get("reference_id") ||
+    decodePaymentToken(searchParams.get("payment_token"));
+
+  useEffect(() => {
+    if (!referenceId) return;
+
+    try {
+      const pendingOrder = JSON.parse(
+        localStorage.getItem("prabhupada-book-pending-order")
+      );
+
+      if (!pendingOrder?.email) return;
+
+      const storageKey = `prabhupada-book-orders-${pendingOrder.email}`;
+      const existingOrders = JSON.parse(localStorage.getItem(storageKey)) || [];
+      const order = {
+        ...pendingOrder,
+        referenceId,
+      };
+
+      localStorage.setItem(
+        storageKey,
+        JSON.stringify([
+          order,
+          ...existingOrders.filter(
+            (existingOrder) => existingOrder.referenceId !== referenceId
+          ),
+        ])
+      );
+      localStorage.removeItem("prabhupada-book-pending-order");
+    } catch (error) {
+      console.error("Unable to save completed book order:", error);
+    }
+  }, [referenceId]);
 
   return (
     <main className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
