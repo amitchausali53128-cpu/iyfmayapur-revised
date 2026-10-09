@@ -448,7 +448,7 @@ export default function Store() {
   };
 
   const coverStyle = (book) => ({
-    backgroundPosition: book.coverPosition,
+    backgroundPosition: "center center",
     ...(book.imageUrl
       ? { backgroundImage: `url("${book.imageUrl}")`, backgroundSize: "contain" }
       : {}),
@@ -1322,12 +1322,19 @@ function CheckoutModal({ cart, subtotal, shipping, total, onClose }) {
         })
       );
 
+      const sanitizedCart = cart
+        .map((item) => ({
+          id: item.id ?? item._id,
+          qty: Number(item.qty ?? item.quantity ?? 1),
+        }))
+        .filter((item) => item.id && Number.isFinite(item.qty) && item.qty > 0);
+
       const response = await fetch("/api/payment/initiate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
-          cart,
+          cart: sanitizedCart,
           payment_type: "store",
           amount: total,
           transaction_purpose: "Book Purchase",

@@ -90,6 +90,95 @@ function escapePdfText(value) {
   return String(value ?? "").replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
 }
 
+function normalizeCartItems(cart) {
+  if (!Array.isArray(cart)) return [];
+
+  const normalized = [];
+  for (const item of cart) {
+    if (!item || typeof item !== "object") continue;
+
+    const id = item.id ?? item._id ?? item.book_id ?? item.bookId;
+    const qty = Number(item.qty ?? item.quantity ?? item.book_quantity ?? 1);
+
+    if (!id || !Number.isFinite(qty) || qty <= 0) continue;
+
+    normalized.push({ id: String(id), qty: Math.trunc(qty) });
+  }
+
+  return normalized;
+}
+
+function asMoney(value, fallback = 0) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : fallback;
+}
+
+async function buildCanonicalStoreOrder(bookServerUrl, cart) {
+  const response = await fetch(`${bookServerUrl}/books`);
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok || !Array.isArray(data)) {
+    throw new Error("Unable to load the book catalog for checkout validation.");
+  }
+
+  const catalog = new Map();
+  for (const book of data) {
+    if (!book || typeof book !== "object") continue;
+
+    const id = book._id ?? book.id ?? book.book_id ?? book.bookId;
+    if (id) catalog.set(String(id), book);
+  }
+
+  let subtotal = 0;
+  const canonicalBooks = [];
+
+  for (const item of cart) {
+    const catalogEntry = catalog.get(item.id);
+    if (!catalogEntry) {
+      throw new Error(`Book ${item.id} is no longer available.`);
+    }
+
+    const price = asMoney(
+      catalogEntry.book_price ?? catalogEntry.price ?? catalogEntry.amount ?? catalogEntry.sale_price,
+      0
+    );
+    if (price <= 0) {
+      throw new Error(`Book ${item.id} is missing a valid price.`);
+    }
+
+    const stock = asMoney(
+      catalogEntry.available_quantity ?? catalogEntry.stock ?? catalogEntry.quantity ?? catalogEntry.inventory,
+      Number.POSITIVE_INFINITY
+    );
+    if (Number.isFinite(stock) && item.qty > stock) {
+      throw new Error(`Book ${item.id} exceeds the available stock.`);
+    }
+
+    const lineTotal = price * item.qty;
+    subtotal += lineTotal;
+
+    canonicalBooks.push({
+      id: item.id,
+      book_quantity: item.qty,
+      book_name:
+        catalogEntry.book_name ??
+        catalogEntry.title ??
+        catalogEntry.name ??
+        `Book ${item.id}`,
+      book_price: Number(price.toFixed(2)),
+      book_format:
+        catalogEntry.book_format ??
+        catalogEntry.format ??
+        "Book",
+    });
+  }
+
+  const shipping = subtotal >= 999 || subtotal === 0 ? 0 : 79;
+  const amount = Number((subtotal + shipping).toFixed(2));
+
+  return { amount, books: canonicalBooks };
+}
+
 function createReceiptPdf(payment) {
   const rows = [
     "IYF MAYAPUR - DONATION RECEIPT", "Thank you for your generous contribution.", "",
@@ -116,13 +205,38 @@ async function handleInitiate(request, response) {
   const missing = requiredFields.filter((field) => !String(input[field] ?? "").trim());
   const amount = Number(input.amount);
   if (missing.length || !Number.isFinite(amount) || amount <= 0) return sendJson(response, 400, { error: "Please complete all required donation details.", fields: missing });
+
+  if (input.payment_type === "store") {
+    const cart = normalizeCartItems(input.cart);
+    if (!cart.length) return sendJson(response, 400, { error: "Your cart is empty or invalid." });
+
+    try {
+      const canonicalOrder = await buildCanonicalStoreOrder(
+        process.env.BOOK_SERVER_URL || "http://localhost:3000",
+        cart
+      );
+
+      if (Math.abs(amount - canonicalOrder.amount) > 0.01) {
+        return sendJson(response, 400, { error: "The invoice amount does not match the server-validated cart total." });
+      }
+
+      input.cart = cart;
+      input.amount = canonicalOrder.amount;
+      input.books = canonicalOrder.books;
+    } catch (error) {
+      return sendJson(response, 400, {
+        error: error instanceof Error ? error.message : "The cart could not be validated.",
+      });
+    }
+  }
+
   const referenceId =
   `IYF-STORE-${Date.now()}-${randomUUID().slice(0, 8).toUpperCase()}`;
 
   
   const payload = {
     dept_code: DEPARTMENT_CODE, name: `${input.first_name} ${input.last_name}`, email: input.email,
-    reference_id: referenceId, amount: amount.toFixed(2), mode: "1", type: "1", isRecurring: "0",
+    reference_id: referenceId, amount: Number(input.amount).toFixed(2), mode: "1", type: "1", isRecurring: "0",
     mobile: input.mobile, first_name: input.first_name, middle_name: input.middle_name || "", last_name: input.last_name,
     transaction_purpose: input.transaction_purpose || "General Donation", course_id: input.course_id || "", pan_card: input.pan_card || "", passport_no: input.passport_no || "",
     address_1: input.address_1, address_2: input.address_2 || "", post_office: input.post_office || "",

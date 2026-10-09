@@ -21,6 +21,98 @@ const required = [
   "country",
 ];
 
+function normalizeCartItems(cart) {
+  if (!Array.isArray(cart)) return [];
+
+  const normalized = [];
+  for (const item of cart) {
+    if (!item || typeof item !== "object") continue;
+
+    const id = item.id ?? item._id ?? item.book_id ?? item.bookId;
+    const qty = Number(item.qty ?? item.quantity ?? item.book_quantity ?? 1);
+
+    if (!id || !Number.isFinite(qty) || qty <= 0) continue;
+
+    normalized.push({
+      id: String(id),
+      qty: Math.trunc(qty),
+    });
+  }
+
+  return normalized;
+}
+
+function asMoney(value, fallback = 0) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : fallback;
+}
+
+async function buildCanonicalStoreOrder(bookServerUrl, cart) {
+  const response = await fetch(`${bookServerUrl}/books`);
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok || !Array.isArray(data)) {
+    throw new Error("Unable to load the book catalog for checkout validation.");
+  }
+
+  const catalog = new Map();
+  for (const book of data) {
+    if (!book || typeof book !== "object") continue;
+
+    const id = book._id ?? book.id ?? book.book_id ?? book.bookId;
+    if (id) catalog.set(String(id), book);
+  }
+
+  let subtotal = 0;
+  const canonicalBooks = [];
+
+  for (const item of cart) {
+    const catalogEntry = catalog.get(item.id);
+    if (!catalogEntry) {
+      throw new Error(`Book ${item.id} is no longer available.`);
+    }
+
+    const price = asMoney(
+      catalogEntry.book_price ?? catalogEntry.price ?? catalogEntry.amount ?? catalogEntry.sale_price,
+      0
+    );
+    if (price <= 0) {
+      throw new Error(`Book ${item.id} is missing a valid price.`);
+    }
+
+    const stock = asMoney(
+      catalogEntry.available_quantity ?? catalogEntry.stock ?? catalogEntry.quantity ?? catalogEntry.inventory,
+      Number.POSITIVE_INFINITY
+    );
+    if (Number.isFinite(stock) && item.qty > stock) {
+      throw new Error(`Book ${item.id} exceeds the available stock.`);
+    }
+
+    const lineTotal = price * item.qty;
+    subtotal += lineTotal;
+
+    canonicalBooks.push({
+      id: item.id,
+      book_quantity: item.qty,
+      book_name:
+        catalogEntry.book_name ??
+        catalogEntry.title ??
+        catalogEntry.name ??
+        `Book ${item.id}`,
+      book_price: Number(price.toFixed(2)),
+      book_format:
+        catalogEntry.book_format ??
+        catalogEntry.format ??
+        "Book",
+    });
+  }
+
+  const shipping = subtotal >= 999 || subtotal === 0 ? 0 : 79;
+  const amount = Number((subtotal + shipping).toFixed(2));
+
+  return { amount, books: canonicalBooks, shipping };
+}
+
 export default async function handler(request, response) {
   if (request.method !== "POST") {
     return response.status(405).json({
@@ -52,6 +144,39 @@ export default async function handler(request, response) {
 
     const isStorePayment =
       input.payment_type === "store";
+
+    if (isStorePayment) {
+      const cart = normalizeCartItems(input.cart);
+      if (!cart.length) {
+        return response.status(400).json({
+          error: "Your cart is empty or invalid.",
+        });
+      }
+
+      try {
+        const canonicalOrder = await buildCanonicalStoreOrder(
+          process.env.BOOK_SERVER_URL || "http://localhost:3000",
+          cart
+        );
+
+        if (Math.abs(amount - canonicalOrder.amount) > 0.01) {
+          return response.status(400).json({
+            error: "The invoice amount does not match the server-validated cart total.",
+          });
+        }
+
+        input.cart = cart;
+        input.amount = canonicalOrder.amount;
+        input.books = canonicalOrder.books;
+      } catch (error) {
+        return response.status(400).json({
+          error:
+            error instanceof Error
+              ? error.message
+              : "The cart could not be validated.",
+        });
+      }
+    }
 
     const isLmsPayment =
       input.payment_type === "lms";
@@ -105,7 +230,7 @@ export default async function handler(request, response) {
     const payload = {
       mode: "1",
       type: "1",
-      amount: amount.toFixed(2),
+      amount: Number(input.amount).toFixed(2),
 
       reference_id: referenceId,
 
@@ -179,13 +304,16 @@ export default async function handler(request, response) {
   process.env.BOOK_SERVER_URL ||
   "http://localhost:3000";
 
-  const books = (input.cart|| []).map((book) => ({
-    id: book.id,
-    book_quantity: book.qty,
-    book_name: book.title,
-    book_price: book.price,
-    book_format: book.format,
-  }));
+  const books =
+    isStorePayment && Array.isArray(input.books)
+      ? input.books
+      : (input.cart || []).map((book) => ({
+          id: book.id,
+          book_quantity: Number(book.qty ?? book.quantity ?? 1),
+          book_name: book.title ?? book.book_name ?? `Book ${book.id}`,
+          book_price: Number(book.price ?? 0),
+          book_format: book.format ?? book.book_format ?? "Book",
+        }));
 
 const transactionResponse = await fetch(
   `${bookServerUrl}/transactions/`,
