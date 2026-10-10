@@ -1327,7 +1327,10 @@ function CheckoutModal({ cart, subtotal, shipping, total, onClose }) {
         }))
         .filter((item) => item.id && Number.isFinite(item.qty) && item.qty > 0);
 
-      const response = await fetch("/api/payment/initiate", {
+        alert("Checkout not implemented.")
+        return;
+
+      const response = await fetch("", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -202,69 +202,52 @@ function createReceiptPdf(payment) {
 
 async function handleInitiate(request, response) {
   const input = await readJson(request);
+  const paymentType = String(input.payment_type ?? "donation").trim().toLowerCase();
+
+  if (paymentType !== "donation") {
+    return sendJson(response, 400, { error: "Only donation payments are accepted." });
+  }
+
   const missing = requiredFields.filter((field) => !String(input[field] ?? "").trim());
   const amount = Number(input.amount);
   if (missing.length || !Number.isFinite(amount) || amount <= 0) return sendJson(response, 400, { error: "Please complete all required donation details.", fields: missing });
 
-  if (input.payment_type === "store") {
-    const cart = normalizeCartItems(input.cart);
-    if (!cart.length) return sendJson(response, 400, { error: "Your cart is empty or invalid." });
+  const referenceId = `IYF-${Date.now()}-${randomUUID().slice(0, 8).toUpperCase()}`;
 
-    try {
-      const canonicalOrder = await buildCanonicalStoreOrder(
-        process.env.BOOK_SERVER_URL || "http://localhost:3000",
-        cart
-      );
-
-      if (Math.abs(amount - canonicalOrder.amount) > 0.01) {
-        return sendJson(response, 400, { error: "The invoice amount does not match the server-validated cart total." });
-      }
-
-      input.cart = cart;
-      input.amount = canonicalOrder.amount;
-      input.books = canonicalOrder.books;
-    } catch (error) {
-      return sendJson(response, 400, {
-        error: error instanceof Error ? error.message : "The cart could not be validated.",
-      });
-    }
-  }
-
-  const referenceId =
-  `IYF-STORE-${Date.now()}-${randomUUID().slice(0, 8).toUpperCase()}`;
-
-  
   const payload = {
-    dept_code: DEPARTMENT_CODE, name: `${input.first_name} ${input.last_name}`, email: input.email,
-    reference_id: referenceId, amount: Number(input.amount).toFixed(2), mode: "1", type: "1", isRecurring: "0",
-    mobile: input.mobile, first_name: input.first_name, middle_name: input.middle_name || "", last_name: input.last_name,
-    transaction_purpose: input.transaction_purpose || "General Donation", course_id: input.course_id || "", pan_card: input.pan_card || "", passport_no: input.passport_no || "",
-    address_1: input.address_1, address_2: input.address_2 || "", post_office: input.post_office || "",
-    pin_code: input.pin_code, district: input.district, city: input.city, state: input.state, country: input.country,
+    dept_code: DEPARTMENT_CODE,
+    name: `${input.first_name} ${input.last_name}`,
+    email: input.email,
+    reference_id: referenceId,
+    amount: Number(input.amount).toFixed(2),
+    mode: "1",
+    type: "1",
+    isRecurring: "0",
+    mobile: input.mobile,
+    first_name: input.first_name,
+    middle_name: input.middle_name || "",
+    last_name: input.last_name,
+    transaction_purpose: input.transaction_purpose || "General Donation",
+    course_id: "",
+    pan_card: input.pan_card || "",
+    passport_no: input.passport_no || "",
+    address_1: input.address_1,
+    address_2: input.address_2 || "",
+    post_office: input.post_office || "",
+    pin_code: input.pin_code,
+    district: input.district,
+    city: input.city,
+    state: input.state,
+    country: input.country,
   };
+
   payments.set(referenceId, { ...payload, status: "pending", created_at: new Date().toISOString() });
   const data = encryptPayload(payload);
   sendJson(response, 200, { reference_id: referenceId, payment_url: `${GATEWAY_URL}?dept_code=${DEPARTMENT_CODE}&data=${encodeURIComponent(data)}` });
 }
 
 async function handleLmsInitiate(request, response) {
-  const input = await readJson(request);
-  const required = [...requiredFields, "course_id"];
-  const missing = required.filter((field) => !String(input[field] ?? "").trim());
-  const amount = Number(input.amount);
-  if (missing.length || !Number.isFinite(amount) || amount <= 0) return sendJson(response, 400, { error: "Please complete the course payment details.", fields: missing });
-  const referenceId = `IYF-LMS-${Date.now()}-${randomUUID().slice(0, 8).toUpperCase()}`;
-  const payload = {
-    dept_code: DEPARTMENT_CODE, name: `${input.first_name} ${input.last_name}`, email: input.email,
-    reference_id: referenceId, amount: amount.toFixed(2), mode: "1", type: "1", isRecurring: "0",
-    mobile: input.mobile, first_name: input.first_name, middle_name: input.middle_name || "", last_name: input.last_name,
-    transaction_purpose: `LMS Course Enrollment (course_id:${input.course_id})`, course_id: String(input.course_id), pan_card: "", passport_no: "",
-    address_1: input.address_1, address_2: input.address_2 || "", post_office: input.post_office || "",
-    pin_code: input.pin_code, district: input.district, city: input.city, state: input.state, country: input.country,
-  };
-  payments.set(referenceId, { ...payload, status: "pending", created_at: new Date().toISOString() });
-  const data = encryptPayload(payload);
-  sendJson(response, 200, { reference_id: referenceId, payment_url: `${GATEWAY_URL}?dept_code=${DEPARTMENT_CODE}&data=${encodeURIComponent(data)}` });
+  return sendJson(response, 410, { error: "LMS payments are no longer supported. Donation payments only." });
 }
 
 function handleCallback(requestUrl, response) {
@@ -297,55 +280,8 @@ function handleCallback(requestUrl, response) {
 
     payments.set(referenceId, payment);
 
-    /*
-     * Determine the transaction type.
-     *
-     * We check BOTH the original request and the gateway
-     * callback because either one may contain the purpose.
-     */
-    const transactionPurpose = String(
-      result.transaction_purpose ||
-      result.Transaction_Purpose ||
-      existing.transaction_purpose ||
-      ""
-    ).trim();
-
-    /*
-     * LMS payment
-     */
-    const courseId =
-      existing.course_id ||
-      result.course_id ||
-      result.Course_Id ||
-      transactionPurpose.match(
-        /course[_ ]id[:=]([\w-]+)/i
-      )?.[1] ||
-      "";
-
-    /*
-     * Book-store payment
-     */
-    const isBookPurchase =
-      /book\s*purchase/i.test(transactionPurpose) ||
-      /book/i.test(transactionPurpose);
-
-    let destination;
-
-    if (courseId) {
-      destination =
-        `${SITE_URL}/lms/course/` +
-        `${encodeURIComponent(courseId)}`;
-    } else if (isBookPurchase) {
-      destination =
-        `${SITE_URL}/store/thank-you`;
-    } else {
-      destination =
-        `${SITE_URL}/donation`;
-    }
-
-    const separator = destination.includes("?")
-      ? "&"
-      : "?";
+    const destination = `${SITE_URL}/donation`;
+    const separator = destination.includes("?") ? "&" : "?";
 
     response.writeHead(302, {
       Location:

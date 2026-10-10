@@ -67,11 +67,14 @@ export default async function handler(
     const referenceId =
       String(claims.reference_id);
 
-    const isStorePayment =
-      referenceId.startsWith("IYF-STORE-");
-
-    const isLmsPayment =
-      referenceId.startsWith("IYF-LMS-");
+    if (
+      referenceId.startsWith("IYF-STORE-") ||
+      referenceId.startsWith("IYF-LMS-")
+    ) {
+      throw new Error(
+        "Store and LMS payments are no longer supported. Donation payments only."
+      );
+    }
 
     /*
      * 4. Never process a failed payment.
@@ -85,7 +88,7 @@ export default async function handler(
     /*
      * 5. STORE PAYMENT
      */
-    if (isStorePayment) {
+    if (false) {
       /*
        * Send store notification email.
        *
@@ -285,7 +288,7 @@ export default async function handler(
     /*
      * 6. LMS PAYMENT
      */
-    if (isLmsPayment) {
+    if (false) {
       if (!claims.course_id) {
         throw new Error(
           "Missing course_id in LMS reference"

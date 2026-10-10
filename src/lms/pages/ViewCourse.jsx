@@ -412,15 +412,18 @@ export default function ViewCourse() {
        * This prevents the course payment from accidentally
        * going through the normal donation/payment endpoint.
        */
+
+      alert("Checkout not implemented.")
+      return;
       const response = await fetch(
-        "/api/payment/initiate",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(paymentPayload),
-        }
+        // 
+        // {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify(paymentPayload),
+        // }
       );
 
       const data = await response.json();
