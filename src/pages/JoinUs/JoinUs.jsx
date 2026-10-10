@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import TempImg from "../../assets/Temple.webp";
+const apiUrl = import.meta.env.VITE_SADHNA_API_URL;
 
 /* =========================================================
    DECORATIONS
@@ -93,10 +94,10 @@ const decorations = [
 ];
 
 /* =========================================================
-   INTERESTS
+   INSPIRATION
 ========================================================= */
 
-const interests = [
+const inspirations = [
   "Spiritual Growth",
   "Leadership",
   "Community Service",
@@ -381,19 +382,19 @@ const JoinIYF = () => {
   const [form, setForm] = useState({
     name: "",
     phone: "",
-    age: "",
+    dob: "",
     city: "",
     address: "",
 
     contribution: "",
-    expectations: "",
+    expectation: "",
 
     email: "",
     password: "",
     confirmPassword: "",
   });
 
-  const [selectedInterests, setSelectedInterests] = useState([]);
+  const [selectedInspirations, setSelectedInspirations] = useState([]);
 
   const updateForm = (key, value) => {
     setForm((prev) => ({
@@ -402,11 +403,11 @@ const JoinIYF = () => {
     }));
   };
 
-  const toggleInterest = (interest) => {
-    setSelectedInterests((prev) =>
-      prev.includes(interest)
-        ? prev.filter((item) => item !== interest)
-        : [...prev, interest],
+  const toggleInspiration = (inspiration) => {
+    setSelectedInspirations((prev) =>
+      prev.includes(inspiration)
+        ? prev.filter((item) => item !== inspiration)
+        : [...prev, inspiration],
     );
   };
 
@@ -430,13 +431,50 @@ const JoinIYF = () => {
     }
   };
 
-  const handleSubmit = () => {
-    console.log("Registration data:", {
-      ...form,
-      interests: selectedInterests,
-    });
+  const handleSubmit = async () => {
+    const registrationData = {
+      name: form.name,
+      email: form.email,
+      password: form.password,
+      phone: form.phone,
+      address: [form.address, form.city].filter(Boolean).join(", "),
+      dob: form.dob,
+      onboarding: {
+        expectation: form.expectation,
+        contribution: form.contribution,
+        inspiration: selectedInspirations,
+      },
+    };
 
-    // Connect your signup API here.
+
+    try {
+      const response = await fetch(`${apiUrl}/api/user/register`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(registrationData),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        setStep(5);
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      } else {
+        window.alert(
+          data?.message || "Registration failed. Please try again.",
+        );
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+      window.alert(
+        "Unable to complete registration. Please try again.",
+      );
+    }
   };
 
   return (
@@ -845,13 +883,12 @@ const JoinIYF = () => {
                       />
 
                       <Input
-                        label="Age"
-                        type="number"
-                        placeholder="Your age"
-                        value={form.age}
+                        label="Date of birth"
+                        type="date"
+                        value={form.dob}
                         required
                         onChange={(value) =>
-                          updateForm("age", value)
+                          updateForm("dob", value)
                         }
                       />
 
@@ -954,9 +991,9 @@ const JoinIYF = () => {
                           label="Question 02"
                           question="What do you expect from IYF Mayapur?"
                           placeholder="Tell us what you hope to learn, experience, receive, or achieve through IYF Mayapur..."
-                          value={form.expectations}
+                          value={form.expectation}
                           onChange={(value) =>
-                            updateForm("expectations", value)
+                            updateForm("expectation", value)
                           }
                         />
                       </div>
@@ -965,12 +1002,12 @@ const JoinIYF = () => {
                 )}
 
                 {/* =================================================
-                    STEP 4 — INTERESTS
+                    STEP 4 — INSPIRATION
                 ================================================== */}
 
                 {step === 3 && (
                   <motion.div
-                    key="interests"
+                    key="inspiration"
                     initial={{
                       opacity: 0,
                       x: 35,
@@ -1001,13 +1038,13 @@ const JoinIYF = () => {
                     />
 
                     <div className="mt-7 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-                      {interests.map((interest, index) => {
+                      {inspirations.map((inspiration, index) => {
                         const selected =
-                          selectedInterests.includes(interest);
+                          selectedInspirations.includes(inspiration);
 
                         return (
                           <motion.button
-                            key={interest}
+                            key={inspiration}
                             type="button"
                             initial={{
                               opacity: 0,
@@ -1027,7 +1064,7 @@ const JoinIYF = () => {
                               scale: 0.97,
                             }}
                             onClick={() =>
-                              toggleInterest(interest)
+                              toggleInspiration(inspiration)
                             }
                             className={`
                               rounded-xl
@@ -1068,7 +1105,7 @@ const JoinIYF = () => {
                             </div>
 
                             <span className="text-[11px] font-medium leading-4 sm:text-xs">
-                              {interest}
+                              {inspiration}
                             </span>
                           </motion.button>
                         );
@@ -1301,13 +1338,49 @@ const JoinIYF = () => {
                     </div>
                   </motion.div>
                 )}
+
+                {step === 5 && (
+                  <motion.div
+                    key="registration-success"
+                    initial={{
+                      opacity: 0,
+                      x: 35,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      x: 0,
+                    }}
+                    exit={{
+                      opacity: 0,
+                      x: -35,
+                    }}
+                    transition={{
+                      duration: 0.45,
+                    }}
+                    className="py-8 text-center sm:py-12"
+                  >
+                    <StepHeading
+                      eyebrow="Registration complete"
+                      title={
+                        <>
+                          Welcome to the{" "}
+                          <span className="italic text-[#f59e0b]">
+                            Krishna Conscious Society.
+                          </span>
+                        </>
+                      }
+                      subtitle="Your registration is complete. We are grateful to have you join our spiritual community."
+                    />
+                  </motion.div>
+                )}
               </AnimatePresence>
 
               {/* =================================================
                   NAVIGATION
               ================================================== */}
 
-              <div className="mt-7 flex items-center justify-between border-t border-[#123047]/10 pt-5">
+              {step < 5 && (
+                <div className="mt-7 flex items-center justify-between border-t border-[#123047]/10 pt-5">
                 {step > 0 ? (
                   <motion.button
                     type="button"
@@ -1404,7 +1477,8 @@ const JoinIYF = () => {
                     Create Account →
                   </motion.button>
                 )}
-              </div>
+                </div>
+              )}
             </div>
           </motion.div>
 

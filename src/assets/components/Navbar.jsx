@@ -125,15 +125,15 @@ export default function Navbar() {
         ))}
       </ul>
 
-      {/* <NavLink
+      <NavLink
         to="/join"
         onClick={() => setMenuOpen(false)}
         className="py-2 px-5 bg-[#fe9d2c] hidden lg:block hover:bg-[#b5752a] text-white text-center font-semibold rounded-xl shadow-md active:scale-98 transition-all duration-200"
       >
         Join Us
-      </NavLink> */}
+      </NavLink>
 
-      <div className="py-2 px-5 hidden lg:block"></div>
+
 
       {/* Mobile Hamburger Button */}
       <button
@@ -215,13 +215,13 @@ export default function Navbar() {
           <div className="my-4 border-t border-gray-100" />
 
           {/* Join Us Call-To-Action Button */}
-          {/* <NavLink
+          <NavLink
             to="/join"
             onClick={() => setMenuOpen(false)}
             className="w-full py-3 px-4 bg-[#fe9d2c] hover:bg-[#b5752a] text-white text-center font-semibold rounded-xl shadow-md active:scale-98 transition-all duration-200"
           >
             Join Us
-          </NavLink> */}
+          </NavLink>
         </div>
       </div>
     </nav>
