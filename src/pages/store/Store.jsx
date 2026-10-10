@@ -819,7 +819,7 @@ export default function Store() {
               <strong className={`${serif} text-3xl`}>₹{total}</strong>
             </div>
 
-            <button type="button" onClick={openCheckout} className={`${goldButton} mt-2 w-full`}>
+            <button type="button" onClick={()=>{alert("Checkout not implemented")}} className={`${goldButton} mt-2 w-full`}>
               Proceed to checkout
               <FiArrowRight />
             </button>

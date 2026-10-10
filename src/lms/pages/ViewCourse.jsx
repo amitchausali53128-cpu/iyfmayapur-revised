@@ -640,7 +640,7 @@ export default function ViewCourse() {
             </button>
           ) : (
             <button
-              onClick={handleEnrollment}
+              onClick={()=>{alert("Checkout not implemented.")}}
               disabled={checkoutLoading}
               className="w-full bg-[#f59e0b] hover:bg-[#d97706] text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all duration-200 transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
