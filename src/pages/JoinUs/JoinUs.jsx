@@ -9,6 +9,7 @@ import {
   User,
   Mail,
   Lock,
+  LoaderCircle,
 } from "lucide-react";
 
 import TempImg from "../../assets/Temple.webp";
@@ -373,6 +374,7 @@ const StepHeading = ({ eyebrow, title, subtitle }) => {
 ========================================================= */
 
 const JoinIYF = () => {
+  const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(0);
 
   const [showPassword, setShowPassword] = useState(false);
@@ -432,6 +434,8 @@ const JoinIYF = () => {
   };
 
   const handleSubmit = async () => {
+    if (loading) return;
+
     const registrationData = {
       name: form.name,
       email: form.email,
@@ -446,8 +450,9 @@ const JoinIYF = () => {
       },
     };
 
-
     try {
+      setLoading(true);
+
       const response = await fetch(`${apiUrl}/api/user/register`, {
         headers: {
           "Content-Type": "application/json",
@@ -474,6 +479,8 @@ const JoinIYF = () => {
       window.alert(
         "Unable to complete registration. Please try again.",
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -1472,9 +1479,39 @@ const JoinIYF = () => {
                       text-[#123047]
                       sm:px-6
                       sm:py-3
+
+                      hover:disabled:bg-[#f59e0b]/70
+                      hover:disabled:text-[#123047]/70
                     "
+                    disabled={loading}
                   >
-                    Create Account →
+                    {loading ? (
+                      <span className="inline-flex items-center gap-2">
+                        <LoaderCircle
+                          size={14}
+                          aria-hidden="true"
+                          className="animate-spin"
+                        />
+                        Creating your account
+                        <span className="inline-flex w-4">
+                          {[0, 1, 2].map((index) => (
+                            <motion.span
+                              key={index}
+                              animate={{ opacity: [0.25, 1, 0.25] }}
+                              transition={{
+                                duration: 1.2,
+                                repeat: Infinity,
+                                delay: index * 0.2,
+                              }}
+                            >
+                              .
+                            </motion.span>
+                          ))}
+                        </span>
+                      </span>
+                    ) : (
+                      "Create Account →"
+                    )}
                   </motion.button>
                 )}
                 </div>

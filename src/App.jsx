@@ -26,6 +26,7 @@ const JoinUs = lazy(() => import('./pages/JoinUs/JoinUs.jsx'))
 const StoreThankYou = lazy(() => import('./pages/ThankStore.jsx'))
 const TransactionFailed = lazy(() => import('./pages/TransactionFailed.jsx'))
 const LegalPage = lazy(() => import('./pages/Legal/LegalPage.jsx'))
+const Sadhna = lazy(() => import('./pages/sadhna/Sadhna.jsx'))
 
 function PageLoader() {
   return <div className="flex min-h-[40vh] items-center justify-center text-sm text-stone-500">Loading...</div>
@@ -64,11 +65,11 @@ function App() {
           <Suspense fallback={<PageLoader />}>
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<PageTransition><Home /></PageTransition>} />
-              <Route path="/prabhupada" element={<PageTransition><Prabhupada /></PageTransition>} />
+              {/* <Route path="/prabhupada" element={<PageTransition><Prabhupada /></PageTransition>} /> */}
               <Route path="/aboutUs" element={<PageTransition><AboutUs /></PageTransition>} />
               <Route path="/events" element={<PageTransition><Events /></PageTransition>} />
               <Route path="/events/:eventSlug" element={<PageTransition><EventDetails /></PageTransition>} />
-              <Route path="/seva" element={<PageTransition><Seva /></PageTransition>} />
+              {/* <Route path="/seva" element={<PageTransition><Seva /></PageTransition>} /> */}
               <Route path="/store" element={<PageTransition><Store /></PageTransition>} />
               <Route path="/donation" element={<PageTransition><Donation /></PageTransition>} />
               <Route path="/courses" element={<PageTransition><Courses /></PageTransition>} />
@@ -81,6 +82,7 @@ function App() {
               <Route path="/gallery" element={<PageTransition><Gallery /></PageTransition>} />
               <Route path="/join" element={<PageTransition><JoinUs /></PageTransition>} />
               <Route path="*" element={<PageTransition><PageNotFound /></PageTransition>} />
+              <Route path="/sadhna" element={<PageTransition><Sadhna /></PageTransition>} />
 
               <Route
   path="/store/thank-you"
