@@ -315,7 +315,7 @@
   padding: 5rem 1.5rem;
   color: #fff;
   text-align: center;
-  background: url('/dev.jpg') center top / cover no-repeat;
+  background: url('https://res.cloudinary.com/vjclcebe/image/upload/q_auto,f_auto/mayapur/mayapur/dev') center top / cover no-repeat;
 }
 
 .lms-vedic-hero__overlay {

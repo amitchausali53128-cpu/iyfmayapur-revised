@@ -626,8 +626,8 @@
 .home-gallery__action { display: flex; justify-content: center; margin-top: 50px; }
 
 :root {
-  --home-cta-background: url('/radha_madhava.jpg');
-  --book-cover-sheet: url('/store/book-cover-sheet.png');
+  --home-cta-background: url('https://res.cloudinary.com/vjclcebe/image/upload/q_auto,f_auto/mayapur/mayapur/radha_madhava');
+  --book-cover-sheet: url('https://res.cloudinary.com/vjclcebe/image/upload/q_auto,f_auto/mayapur/mayapur/store/book-cover-sheet');
 }
 
 .home-cta {

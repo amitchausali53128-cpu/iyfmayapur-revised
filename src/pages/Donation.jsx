@@ -5,7 +5,8 @@ import {
   FiHeart, FiHome, FiLock, FiMail, FiMapPin, FiPhone, FiShield, FiUsers
 } from "react-icons/fi";
 import { cloudinaryAsset } from "../lib/cloudinary";
-import HeroImg from "../assets/DonationHero.png";
+
+const HeroImg = cloudinaryAsset("assets/DonationHero.png");
 
 const amounts = [501,1100,2100,3001,4001,5001];
 

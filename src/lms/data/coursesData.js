@@ -1,6 +1,8 @@
-import gita from '../assets/gita.png';
-import mantra from '../assets/mantra.jpeg';
-import kirtan from '../assets/kirtan.jpg';
+import { cloudinaryAsset } from '../../lib/cloudinary';
+
+const gita = cloudinaryAsset('assets/gita.png');
+const mantra = cloudinaryAsset('assets/mantra.jpeg');
+const kirtan = cloudinaryAsset('assets/kirtan.jpg');
 
 export const initialCourses = [
   {

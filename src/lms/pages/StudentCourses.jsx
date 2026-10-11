@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { CourseCard } from "../components/Card";
-import bgimage from "../assets/sample.jpg";
+import { cloudinaryAsset } from "../../lib/cloudinary";
+
+const bgimage = cloudinaryAsset("assets/sample.jpg");
 import { Link } from "react-router-dom";
 import { getCourses } from "../utils/lmsState";
 import FadeUp from "../utils/motions/FadeUp";
@@ -694,4 +696,3 @@ export default function StudentCourses() {
     </div>
   );
 }
-

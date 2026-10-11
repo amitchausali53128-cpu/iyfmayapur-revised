@@ -1,9 +1,11 @@
 import { CourseCard } from "../assets/components/Card"
 import AnimatedCard from '../assets/components/AnimatedCard.jsx'
-import bgimage from '../assets/sample.jpg'
-import gita from '../assets/gita.png'
-import mantra from '../assets/mantra.jpeg'
-import kirtan from '../assets/kirtan.jpg'
+import { cloudinaryAsset } from "../lib/cloudinary";
+
+const bgimage = cloudinaryAsset("assets/sample.jpg");
+const gita = cloudinaryAsset("assets/gita.png");
+const mantra = cloudinaryAsset("assets/mantra.jpeg");
+const kirtan = cloudinaryAsset("assets/kirtan.jpg");
 import { Link } from "react-router-dom"
 import SidebarLMS from "../assets/components/SidebarLMS"
 

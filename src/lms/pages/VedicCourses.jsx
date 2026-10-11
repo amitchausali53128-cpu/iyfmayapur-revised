@@ -74,7 +74,7 @@ export default function VedicCourses() {
                     className="
                         absolute
                         inset-0
-                        bg-[url('/dev.jpg')]
+                        bg-[url('https://res.cloudinary.com/vjclcebe/image/upload/q_auto,f_auto/mayapur/mayapur/dev')] 
                         bg-cover
                         bg-center
                         md:bg-top

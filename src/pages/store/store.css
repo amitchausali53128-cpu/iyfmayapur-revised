@@ -651,7 +651,7 @@
   width: 185px;
   height: 275px;
   border-radius: 3px 6px 6px 3px;
-  background-image: url("/store/book-covers.png");
+  background-image: url("https://res.cloudinary.com/vjclcebe/image/upload/q_auto,f_auto/mayapur/mayapur/store/book-covers");
   background-repeat: no-repeat;
   background-size: 300% 200%;
   box-shadow:
@@ -1044,7 +1044,7 @@
   width: 68px;
   height: 90px;
   border-radius: 3px;
-  background-image: url("/store/book-covers.png");
+  background-image: url("https://res.cloudinary.com/vjclcebe/image/upload/q_auto,f_auto/mayapur/mayapur/store/book-covers");
   background-repeat: no-repeat;
   background-size: 300% 200%;
   box-shadow: 4px 8px 14px rgba(43, 27, 16, 0.18);

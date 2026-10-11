@@ -15,9 +15,10 @@ import {
 } from "react-icons/fi";
 import Masonry from "react-masonry-css";
 import { Link } from "react-router-dom";
-import Prabhupada from "../../assets/January_20.jpg";
+import { cloudinaryAsset } from "../../lib/cloudinary";
+
+const Prabhupada = cloudinaryAsset("assets/January_20.jpg");
 import AnimatedCard from '../../assets/components/AnimatedCard.jsx';
-import { cloudinaryAsset } from "../../lib/cloudinary.js";
 import AboutHero from "./AboutHero.jsx";
 import WhoWeAre from "./WhoWeAre.jsx";
 import BhagavatamFeature from "../../assets/Bhagavatam.jsx";

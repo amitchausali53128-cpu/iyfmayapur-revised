@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import centerImage from '/sample.jpg'
+import { cloudinaryAsset } from "../../lib/cloudinary";
+
+const centerImage = cloudinaryAsset("sample.jpg");
 import './map.css'
 
 const centers = [

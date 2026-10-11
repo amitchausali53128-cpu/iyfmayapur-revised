@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { cloudinaryAsset } from "../lib/cloudinary";
 import {
   FiBookOpen,
   FiArrowUpRight,
@@ -315,7 +316,7 @@ const BhagavatamFeature = () => {
             "
           >
             <img
-              src="/Bhagwatam.png"
+              src={cloudinaryAsset("Bhagwatam.png")}
               alt="Śrīmad-Bhāgavatam"
               className="
                 block

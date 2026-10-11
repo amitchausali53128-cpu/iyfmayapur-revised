@@ -1,6 +1,8 @@
 import React from "react";
 import { motion } from "motion/react";
-import TempImg from "../../assets/GrpImg1.webp";
+import { cloudinaryAsset } from "../../lib/cloudinary";
+
+const TempImg = cloudinaryAsset("assets/GrpImg1.webp");
 
 const stats = [
   { icon: "👥", value: "10K+", label: "Youth Connected" }, { icon: "📅", value: "50+", label: "Events Organized" },

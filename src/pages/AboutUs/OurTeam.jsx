@@ -1,11 +1,13 @@
 import React from "react";
 import { motion } from "motion/react";
-import Img1 from "../../assets/OurTeam/Img1.png";
-import Img2 from "../../assets/OurTeam/Img2.png";
-import Img3 from "../../assets/OurTeam/Img3.png";
-import Img4 from "../../assets/OurTeam/Img4.png";
-import Img5 from "../../assets/OurTeam/Img5.png";
-import Img6 from "../../assets/OurTeam/Img6.png";
+import { cloudinaryAsset } from "../../lib/cloudinary";
+
+const Img1 = cloudinaryAsset("assets/OurTeam/Img1.png");
+const Img2 = cloudinaryAsset("assets/OurTeam/Img2.png");
+const Img3 = cloudinaryAsset("assets/OurTeam/Img3.png");
+const Img4 = cloudinaryAsset("assets/OurTeam/Img4.png");
+const Img5 = cloudinaryAsset("assets/OurTeam/Img5.png");
+const Img6 = cloudinaryAsset("assets/OurTeam/Img6.png");
 
 const team=[
   {name:"Hg Subhekshna Prabhu ji",image:Img1,role:"Co Director"},

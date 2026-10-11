@@ -1,6 +1,8 @@
 import React from "react";
 import { motion } from "motion/react";
-import centerImage from "../../assets/OurBase/Img1.jpg";
+import { cloudinaryAsset } from "../../lib/cloudinary";
+
+const centerImage = cloudinaryAsset("assets/OurBase/Img1.jpg");
 
 const centers = [
   { name: "Mayapur Base", location: "NIT Durgapur", image: centerImage },

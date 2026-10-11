@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { cloudinaryAsset } from "../../lib/cloudinary";
 import { FaHeart } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 import { useState, useEffect } from "react";
@@ -39,7 +40,7 @@ export default function Footer() {
             {/* Logo container */}
             <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#fbbf24]/30 bg-[#faf8f3] shadow-lg shadow-black/10">
               <img
-                src="/logo.png"
+                src={cloudinaryAsset("logo.png")}
                 alt="IYF Mayapur"
                 className="h-full w-full object-contain p-1.5"
               />

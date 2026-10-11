@@ -6,8 +6,11 @@ import { v2 as cloudinary } from 'cloudinary';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
-const publicDir = path.join(projectRoot, 'public');
-const targetFolder = 'mayapur';
+const sourceDirectories = [
+  { directory: path.join(projectRoot, 'public'), prefix: '' },
+  { directory: path.join(projectRoot, 'src', 'assets'), prefix: 'assets' },
+];
+const targetFolder = 'mayapur/mayapur';
 
 const cloudName = process.env.VITE_CLOUDINARY_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME;
 const apiKey = process.env.CLOUDINARY_API_KEY;
@@ -26,6 +29,7 @@ cloudinary.config({
   api_key: apiKey,
   api_secret: apiSecret,
   secure: true,
+  timeout: 120000,
 });
 
 function getFilesRecursively(directory) {
@@ -45,24 +49,23 @@ function getFilesRecursively(directory) {
   return files;
 }
 
-function toRelativePublicPath(filePath) {
-  return path.relative(publicDir, filePath).split(path.sep).join('/');
+function getSourcePath(filePath, prefix) {
+  const sourcePath = prefix
+    ? path.relative(path.join(projectRoot, 'src', 'assets'), filePath).split(path.sep).join('/')
+    : path.relative(path.join(projectRoot, 'public'), filePath).split(path.sep).join('/');
+
+  return prefix ? `${prefix}/${sourcePath}` : sourcePath;
 }
 
-async function uploadFile(filePath) {
-  const relativePath = toRelativePublicPath(filePath);
+async function uploadFile(filePath, prefix) {
+  const relativePath = getSourcePath(filePath, prefix);
   const publicIdWithoutExtension = relativePath.replace(/\.[^/.]+$/, '');
-  const normalizedPublicId = publicIdWithoutExtension.startsWith(`${targetFolder}/`)
-    ? publicIdWithoutExtension.slice(targetFolder.length + 1)
-    : publicIdWithoutExtension;
-
-  const publicId = `${targetFolder}/${normalizedPublicId}`;
+  const publicId = `${targetFolder}/${publicIdWithoutExtension}`;
 
   await cloudinary.uploader.upload(filePath, {
     public_id: publicId,
-    folder: targetFolder,
     resource_type: 'image',
-    overwrite: false,
+    overwrite: true,
     invalidate: true,
   });
 
@@ -70,31 +73,45 @@ async function uploadFile(filePath) {
 }
 
 async function main() {
-  if (!fs.existsSync(publicDir)) {
-    console.error(`Public directory not found: ${publicDir}`);
-    process.exit(1);
-  }
+  const files = sourceDirectories.flatMap(({ directory, prefix }) => {
+    if (!fs.existsSync(directory)) {
+      console.error(`Image directory not found: ${directory}`);
+      process.exitCode = 1;
+      return [];
+    }
 
-  const files = getFilesRecursively(publicDir)
-    .filter((file) => /\.(png|jpe?g|webp|gif|svg|avif|bmp)$/i.test(file));
+    return getFilesRecursively(directory)
+      .filter((file) => /\.(png|jpe?g|webp|gif|svg|avif|bmp)$/i.test(file))
+      .filter((file) => path.basename(file).toLowerCase() !== 'temple.webp')
+      .map((file) => ({ file, prefix }));
+  });
 
   if (!files.length) {
-    console.warn(`No image files found in ${publicDir}`);
+    console.warn('No image files found in configured image directories');
     return;
   }
 
   console.log(`Uploading ${files.length} files to Cloudinary folder: ${targetFolder}`);
 
-  for (const file of files) {
+  let failedUploads = 0;
+
+  for (const { file, prefix } of files) {
     try {
-      await uploadFile(file);
+      await uploadFile(file, prefix);
     } catch (error) {
-      console.error(`Failed to upload ${toRelativePublicPath(file)}`);
+      failedUploads += 1;
+      console.error(`Failed to upload ${getSourcePath(file, prefix)}`);
       console.error(error.message || error);
     }
   }
 
-  console.log('Bulk upload completed.');
+  if (failedUploads) {
+    console.error(`Bulk upload completed with ${failedUploads} failure(s).`);
+    process.exitCode = 1;
+    return;
+  }
+
+  console.log('Bulk upload completed successfully.');
 }
 
 main();

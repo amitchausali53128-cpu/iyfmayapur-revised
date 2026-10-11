@@ -1,4 +1,5 @@
 import React from "react";
+import { cloudinaryAsset } from "../../lib/cloudinary";
 import { NavLink } from "react-router-dom";
 import { motion } from "motion/react";
 import {
@@ -78,7 +79,7 @@ const Footer = () => (
         >
           <NavLink to="/" className="flex items-center gap-3">
             <img
-              src="/logo.png"
+              src={cloudinaryAsset("logo.png")}
               alt="IYF Mayapur Logo"
               className="h-12 w-auto object-contain"
             />

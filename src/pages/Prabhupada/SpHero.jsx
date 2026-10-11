@@ -1,5 +1,7 @@
 import React from "react";
-import HeroImg from "../../assets/SpImg/SpImg.jpg";
+import { cloudinaryAsset } from "../../lib/cloudinary";
+
+const HeroImg = cloudinaryAsset("assets/SpImg/SpImg.jpg");
 import {
   BookOpen,
   HeartHandshake,

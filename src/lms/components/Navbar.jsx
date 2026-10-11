@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { cloudinaryAsset } from "../../lib/cloudinary";
 import { Link, useLocation } from "react-router-dom";
 import { FaBars, FaTimes, FaArrowLeft } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
@@ -133,7 +134,7 @@ export default function Navbar() {
         className="flex items-center gap-3 py-2 group"
       >
         <img
-          src="/logo.png"
+          src={cloudinaryAsset("logo.png")}
           alt="IYF Mayapur Logo"
           className="
             h-11 sm:h-12
@@ -592,4 +593,3 @@ export default function Navbar() {
     </nav>
   );
 }
-

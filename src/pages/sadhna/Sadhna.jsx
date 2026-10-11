@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import avatar from "/avatar.png";
+import { cloudinaryAsset } from "../../lib/cloudinary";
+
+const avatar = cloudinaryAsset("avatar.png");
 import ClockPicker from "./components/ClockPicker";
 
 import {

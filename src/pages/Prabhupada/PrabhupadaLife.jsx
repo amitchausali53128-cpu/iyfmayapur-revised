@@ -1,8 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FiArrowUpRight, FiArrowRight } from "react-icons/fi";
-import PrabhupadaImg from "../../assets/SpImg/PrabhupadaImg.jpg";
-import Teachingbg from "../../assets/SpImg/Teachings.png";
+import { cloudinaryAsset } from "../../lib/cloudinary";
+
+const PrabhupadaImg = cloudinaryAsset("assets/SpImg/PrabhupadaImg.jpg");
+const Teachingbg = cloudinaryAsset("assets/SpImg/Teachings.png");
 
 const TIMELINE_DATA = [
   {

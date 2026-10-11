@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
-import image2 from "/jps.png";
+import { cloudinaryAsset } from "../../lib/cloudinary";
+
+const image2 = cloudinaryAsset("jps.png");
 
 export default function Inspiration() {
   const butterflies = [
@@ -23,7 +25,7 @@ export default function Inspiration() {
   return (
     <section
       className="relative flex min-h-[70vh] items-center justify-center overflow-hidden bg-[#FFFDF9] bg-contain bg-right bg-no-repeat px-6 py-16 md:py-24"
-      style={{ backgroundImage: "url('/prabhupada2.jpg')" }}
+      style={{ backgroundImage: `url(${cloudinaryAsset("prabhupada2.jpg")})` }}
     >
 
       {/* ================= BACKGROUND DECORATION ================= */}

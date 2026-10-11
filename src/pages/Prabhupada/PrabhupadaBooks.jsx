@@ -1,8 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import Books from "../../assets/SpImg/SpBooks.png";
-import Quotebg from "../../assets/SpImg/Quotebg.png";
+import { cloudinaryAsset } from "../../lib/cloudinary";
+
+const Books = cloudinaryAsset("assets/SpImg/SpBooks.png");
+const Quotebg = cloudinaryAsset("assets/SpImg/Quotebg.png");
 
 const PrabhupadaBooks = () => {
   return (
