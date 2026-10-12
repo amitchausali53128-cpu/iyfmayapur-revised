@@ -27,6 +27,7 @@ const StoreThankYou = lazy(() => import('./pages/ThankStore.jsx'))
 const TransactionFailed = lazy(() => import('./pages/TransactionFailed.jsx'))
 const LegalPage = lazy(() => import('./pages/Legal/LegalPage.jsx'))
 const Sadhna = lazy(() => import('./pages/sadhna/Sadhna.jsx'))
+const Login = lazy(() => import('./pages/sadhna/Auth.jsx'))
 
 function PageLoader() {
   return <div className="flex min-h-[40vh] items-center justify-center text-sm text-stone-500">Loading...</div>
@@ -83,7 +84,7 @@ function App() {
               <Route path="/join" element={<PageTransition><JoinUs /></PageTransition>} />
               <Route path="*" element={<PageTransition><PageNotFound /></PageTransition>} />
               <Route path="/sadhna" element={<PageTransition><Sadhna /></PageTransition>} />
-
+              <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
               <Route
   path="/store/thank-you"
   element={<StoreThankYou />}

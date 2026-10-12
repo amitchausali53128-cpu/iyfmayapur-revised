@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { cloudinaryAsset } from "../../lib/cloudinary";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { events } from '../../data/events.js';
+import { LogOut } from "lucide-react";
 
 const MENU_ITEMS = [
   { name: "Home", path: "/" },
@@ -18,7 +19,29 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => Boolean(localStorage.getItem("token")));
+  const navigate = useNavigate();
   const hasLiveEvent = events.some((event) => event.category.toLowerCase().includes('camp'));
+
+  useEffect(() => {
+    const syncAuth = () => setIsAuthenticated(Boolean(localStorage.getItem("token")));
+    window.addEventListener("auth-change", syncAuth);
+    window.addEventListener("storage", syncAuth);
+    syncAuth();
+    return () => {
+      window.removeEventListener("auth-change", syncAuth);
+      window.removeEventListener("storage", syncAuth);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setIsAuthenticated(false);
+    setMenuOpen(false);
+    window.dispatchEvent(new Event("auth-change"));
+    navigate("/");
+  };
 
   useEffect(() => {
     let frameId = 0;
@@ -126,14 +149,44 @@ export default function Navbar() {
         ))}
       </ul>
 
-      <NavLink
-        to="/join"
-        onClick={() => setMenuOpen(false)}
-        className="py-2 px-5 bg-[#fe9d2c] hidden lg:block hover:bg-[#b5752a] text-white text-center font-semibold rounded-xl shadow-md active:scale-98 transition-all duration-200"
-      >
-        Join Us
-      </NavLink>
-
+      <div className="hidden items-center gap-1 sm:flex">
+        {isAuthenticated ? (
+          <>
+            <NavLink
+              to="/sadhna"
+              onClick={() => setMenuOpen(false)}
+              className="hidden rounded-xl border border-[#fe9d2c] px-5 py-2 text-center font-semibold text-[#b5752a] shadow-md transition-all duration-200 hover:bg-orange-50 active:scale-95 lg:block"
+            >
+              Sadhna
+            </NavLink>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="hidden items-center gap-2 rounded-xl bg-[#fe9d2c] px-5 py-2 text-center font-semibold text-white shadow-md transition-all duration-200 hover:bg-[#b5752a] active:scale-95 lg:flex"
+            >
+              <LogOut size={16} />
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <NavLink
+              to="/login"
+              onClick={() => setMenuOpen(false)}
+              className="hidden rounded-lg px-5 py-2 text-center font-semibold text-[#5b8d0a] shadow-md transition-all duration-200 hover:border lg:block"
+            >
+              Login
+            </NavLink>
+            <NavLink
+              to="/join"
+              onClick={() => setMenuOpen(false)}
+              className="hidden rounded-xl bg-[#fe9d2c] px-5 py-2 text-center font-semibold text-white shadow-md transition-all duration-200 hover:bg-[#b5752a] active:scale-95 lg:block"
+            >
+              Join Us
+            </NavLink>
+          </>
+        )}
+      </div>
 
 
       {/* Mobile Hamburger Button */}
@@ -215,14 +268,33 @@ export default function Navbar() {
           {/* Subtle Divider */}
           <div className="my-4 border-t border-gray-100" />
 
-          {/* Join Us Call-To-Action Button */}
-          <NavLink
-            to="/join"
-            onClick={() => setMenuOpen(false)}
-            className="w-full py-3 px-4 bg-[#fe9d2c] hover:bg-[#b5752a] text-white text-center font-semibold rounded-xl shadow-md active:scale-98 transition-all duration-200"
-          >
-            Join Us
-          </NavLink>
+          {isAuthenticated ? (
+            <div className="flex flex-col gap-2">
+              <NavLink
+                to="/sadhna"
+                onClick={() => setMenuOpen(false)}
+                className="w-full rounded-xl border border-[#fe9d2c] px-4 py-3 text-center font-semibold text-[#b5752a] shadow-md transition-all duration-200 hover:bg-orange-50 active:scale-95"
+              >
+                Sadhna
+              </NavLink>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#fe9d2c] px-4 py-3 text-center font-semibold text-white shadow-md transition-all duration-200 hover:bg-[#b5752a] active:scale-95"
+              >
+                <LogOut size={17} />
+                Logout
+              </button>
+            </div>
+          ) : (
+            <NavLink
+              to="/join"
+              onClick={() => setMenuOpen(false)}
+              className="w-full rounded-xl bg-[#fe9d2c] px-4 py-3 text-center font-semibold text-white shadow-md transition-all duration-200 hover:bg-[#b5752a] active:scale-95"
+            >
+              Join Us
+            </NavLink>
+          )}
         </div>
       </div>
     </nav>
