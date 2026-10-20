@@ -287,13 +287,22 @@ export default function Navbar() {
               </button>
             </div>
           ) : (
-            <NavLink
-              to="/join"
-              onClick={() => setMenuOpen(false)}
-              className="w-full rounded-xl bg-[#fe9d2c] px-4 py-3 text-center font-semibold text-white shadow-md transition-all duration-200 hover:bg-[#b5752a] active:scale-95"
-            >
-              Join Us
-            </NavLink>
+            <div className="flex flex-col gap-2">
+              <NavLink
+                to="/login"
+                onClick={() => setMenuOpen(false)}
+                className="w-full rounded-xl border border-[#fe9d2c] px-4 py-3 text-center font-semibold text-[#b5752a] shadow-md transition-all duration-200 hover:bg-orange-50 active:scale-95"
+              >
+                Login
+              </NavLink>
+              <NavLink
+                to="/join"
+                onClick={() => setMenuOpen(false)}
+                className="w-full rounded-xl bg-[#fe9d2c] px-4 py-3 text-center font-semibold text-white shadow-md transition-all duration-200 hover:bg-[#b5752a] active:scale-95"
+              >
+                Join Us
+              </NavLink>
+            </div>
           )}
         </div>
       </div>
