@@ -67,3 +67,20 @@ export const getMarksSummary = async () => {
   return apiRequest("/api/reports/marks-summary");
 };
 
+//Get all admins
+export const getAllAdmins = async () => {
+  return apiRequest("/api/user/admins");
+}
+
+//connect to an admin
+export const connectToAdmin = async (adminId, studentIds) => {
+  return apiRequest(`/api/relations/`, {
+    method: "POST",
+    body: JSON.stringify({ adminId, studentIds }),
+  });
+}
+
+//get my connected admins
+export const getMyConnectedAdmins = async (userId) => {
+  return apiRequest(`/api/user/myadmins/${userId}`);
+}

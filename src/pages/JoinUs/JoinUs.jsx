@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { Link } from "react-router-dom";
 import {
   Eye,
   EyeOff,
@@ -1415,45 +1416,56 @@ const JoinIYF = () => {
                 )}
 
                 {step < 4 && (
-                  <motion.button
-                    type="button"
-                    whileHover={{
-                      scale: 1.04,
-                      boxShadow:
-                        "0 10px 30px rgba(245,158,11,0.3)",
-                    }}
-                    whileTap={{
-                      scale: 0.96,
-                    }}
-                    onClick={nextStep}
-                    className="
-                      rounded-full
-                      bg-[#f59e0b]
-                      px-5
-                      py-2.5
-                      text-[10px]
-                      font-bold
-                      tracking-wider
-                      text-[#123047]
-                      sm:px-6
-                      sm:py-3
-                    "
-                  >
-                    {step === 0 ? "Let's Begin" : "Continue"}
+                  <div className="flex items-center gap-3">
+                    {step === 0 && (
+                      <Link
+                        to="/admin/register"
+                        className="text-[15px]  tracking-wide text-blue-500 transition hover:text-blue-800"
+                      >
+                        Register as Admin
+                      </Link>
+                    )}
 
-                    <motion.span
-                      animate={{
-                        x: [0, 4, 0],
+                    <motion.button
+                      type="button"
+                      whileHover={{
+                        scale: 1.04,
+                        boxShadow:
+                          "0 10px 30px rgba(245,158,11,0.3)",
                       }}
-                      transition={{
-                        duration: 1.2,
-                        repeat: Infinity,
+                      whileTap={{
+                        scale: 0.96,
                       }}
-                      className="ml-2 inline-block"
+                      onClick={nextStep}
+                      className="
+                        rounded-full
+                        bg-[#f59e0b]
+                        px-5
+                        py-2.5
+                        text-[10px]
+                        font-bold
+                        tracking-wider
+                        text-[#123047]
+                        sm:px-6
+                        sm:py-3
+                      "
                     >
-                      →
-                    </motion.span>
-                  </motion.button>
+                      {step === 0 ? "Let's Begin" : "Continue"}
+
+                      <motion.span
+                        animate={{
+                          x: [0, 4, 0],
+                        }}
+                        transition={{
+                          duration: 1.2,
+                          repeat: Infinity,
+                        }}
+                        className="ml-2 inline-block"
+                      >
+                        →
+                      </motion.span>
+                    </motion.button>
+                  </div>
                 )}
 
                 {step === 4 && (

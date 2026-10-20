@@ -18,6 +18,7 @@ import {
   Waves,
   Share2,
   X,
+  LoaderCircle,
 } from "lucide-react";
 
 import {
@@ -26,10 +27,12 @@ import {
   getMarksSummary,
   getSadhanaByDate,
   updateSadhana,
+  getAllAdmins,
+  connectToAdmin,
+  getMyConnectedAdmins
 } from "./services/sadhanaApi";
 
 const avatar = cloudinaryAsset("avatar.png");
-
 /* ------------------------------------------------------------------ */
 /* Shared tailwind strings (constants, not CSS classes)                */
 /* ------------------------------------------------------------------ */
@@ -194,6 +197,9 @@ export default function Sadhna() {
     }
   };
 
+  /* ---------------------------- connectToAdmin --------------------------- */
+  const [showConnectModal, setShowConnectModal] = useState(false);
+  
   /* ---------------------------- sharing --------------------------- */
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareStartDate, setShareStartDate] = useState(today);
@@ -413,6 +419,19 @@ export default function Sadhna() {
             <Share2 size={16} />
             Share Sadhana Report
           </button>
+
+          <div>
+            <button
+            onClick={() => {
+              setShowConnectModal(true);
+              
+            }}
+            className="inline-flex w-full items-center justify-center gap-2 rounded border border-blue-400/50 bg-blue-400/10 px-4 py-3 text-sm font-semibold text-orange-300 transition duration-300 hover:bg-blue-200 hover:text-emerald-950"
+          >
+            <Share2 size={16} />
+            + Connect to Admin
+          </button>
+          </div>
         </div>
 
         <div className="relative mt-8 hidden border-t border-white/10 pt-6 text-center lg:block">
@@ -660,7 +679,269 @@ export default function Sadhna() {
           </div>
         )}
       </AnimatePresence>
+      
+      
+      <AnimatePresence>
+        {showConnectModal && (
+          <ConnectModal setShowConnectModal={setShowConnectModal} />
+          )}
+      </AnimatePresence>
     </div>
+  );
+}
+
+function ConnectModal({ setShowConnectModal }) {
+  const [admins, setAdmins] = useState([]);
+  const [connectedAdminIds, setConnectedAdminIds] = useState([]);
+  const [selectedAdminId, setSelectedAdminId] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [connecting, setConnecting] = useState(false);
+  const [error, setError] = useState("");
+  const [connectionMessage, setConnectionMessage] = useState("");
+
+  useEffect(() => {
+    async function getAdminsData() {
+      try {
+        setLoading(true);
+        setError("");
+        let user;
+        try {
+          user = JSON.parse(localStorage.getItem("user"));
+        } catch {
+          user = null;
+        }
+
+        const userId = user?.id || user?._id;
+        if (!userId) {
+          throw new Error("Unable to identify your account. Please log in again.");
+        }
+
+        const [response, connectedResponse] = await Promise.all([
+          getAllAdmins(),
+          getMyConnectedAdmins(userId),
+        ]);
+        const adminList = Array.isArray(response)
+          ? response
+          : Array.isArray(response?.admins)
+            ? response.admins
+            : [];
+        const connectedIds = Array.isArray(connectedResponse)
+          ? connectedResponse
+          : Array.isArray(connectedResponse?.admins)
+            ? connectedResponse.admins
+            : [];
+        setAdmins(adminList);
+        setConnectedAdminIds(
+          connectedIds
+            .map((admin) => admin?._id || admin?.id || admin)
+            .filter(Boolean)
+            .map(String),
+        );
+      } catch (err) {
+        setError(err.message || "Unable to load admins.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    getAdminsData();
+  }, []);
+
+  const connectedAdmins = admins.filter((admin) =>
+    connectedAdminIds.includes(String(admin?._id || admin?.id)),
+  );
+  const availableAdmins = admins.filter(
+    (admin) => !connectedAdminIds.includes(String(admin?._id || admin?.id)),
+  );
+
+  const getAdminName = (admin) =>
+    admin?.name ||
+    [admin?.firstName, admin?.lastName].filter(Boolean).join(" ") ||
+    "Unnamed admin";
+
+  const handleConnect = async () => {
+    if (!selectedAdminId || connecting) return;
+
+    let user;
+    try {
+      user = JSON.parse(localStorage.getItem("user"));
+    } catch {
+      user = null;
+    }
+
+    const userId = user?.id || user?._id;
+    if (!userId) {
+      setConnectionMessage("Unable to identify your account. Please log in again.");
+      return;
+    }
+
+    try {
+      setConnecting(true);
+      setConnectionMessage("");
+      await connectToAdmin(selectedAdminId, [userId]);
+      setConnectionMessage("Connection request sent successfully.");
+      setConnectedAdminIds((currentIds) => [
+        ...currentIds,
+        String(selectedAdminId),
+      ]);
+      setSelectedAdminId("");
+    } catch (err) {
+      setConnectionMessage(err.message || "Unable to connect to this admin.");
+    } finally {
+      setConnecting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 grid place-items-center p-4">
+            <motion.button
+              type="button"
+              aria-label="Close share dialog"
+              onClick={() => setShowConnectModal(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-[#071b2c]/70 backdrop-blur-md"
+            />
+
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              initial={{ opacity: 0, y: 24, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 24, scale: 0.97 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="relative w-full max-w-md space-y-5 rounded-[26px] border border-orange-500/35 bg-white/95 p-7 shadow-[0_50px_100px_-30px_rgba(7,27,44,0.35)]"
+            >
+              <button
+                onClick={() => setShowConnectModal(false)}
+                aria-label="Close"
+                className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full border border-slate-900/10 text-[#123b5d] transition duration-300 hover:rotate-90 hover:bg-[#123b5d] hover:text-white"
+              >
+                <X size={16} />
+              </button>
+
+              <div className="text-center">
+                <div className="text-xl text-orange-500">✦</div>
+                <p className="mb-1 mt-1 text-[11px] uppercase tracking-[0.28em] text-orange-700">
+                  Connect
+                </p>
+                <h3 className={`${serif} text-3xl font-normal text-[#123b5d]`}>
+                  Select Admin
+                </h3>
+              </div>
+
+              <div className="max-h-64 space-y-2 overflow-y-auto pr-1">
+                {loading && (
+                  <div className="flex items-center justify-center gap-2 py-8 text-sm text-slate-500">
+                    <LoaderCircle size={18} className="animate-spin text-orange-500" />
+                    Loading admins...
+                  </div>
+                )}
+
+                {!loading && error && (
+                  <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-center text-sm text-red-700">
+                    {error}
+                  </p>
+                )}
+
+                {!loading && !error && connectedAdmins.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="px-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                      Current admins
+                    </p>
+                    {connectedAdmins.map((admin) => (
+                      <div
+                        key={admin?._id || admin?.id}
+                        className="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3"
+                      >
+                        <span className="grid h-5 w-5 place-items-center rounded-full bg-emerald-600 text-xs text-white">
+                          ✓
+                        </span>
+                        <span className="text-sm font-medium text-[#123b5d]">
+                          {getAdminName(admin)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {!loading && !error && availableAdmins.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="px-1 pt-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                      Connect with another admin
+                    </p>
+                    {availableAdmins.map((admin) => {
+                      const adminId = admin?._id || admin?.id;
+                      const isSelected =
+                        String(selectedAdminId) === String(adminId);
+
+                      if (!adminId) return null;
+
+                      return (
+                        <label
+                          key={adminId}
+                          className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 transition ${
+                            isSelected
+                              ? "border-orange-500 bg-orange-50 shadow-sm"
+                              : "border-slate-200 hover:border-orange-300 hover:bg-orange-50/50"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="connect-admin"
+                            value={adminId}
+                            checked={isSelected}
+                            onChange={() => setSelectedAdminId(adminId)}
+                            className="h-4 w-4 accent-orange-500"
+                          />
+                          <span className="text-sm font-medium text-[#123b5d]">
+                            {getAdminName(admin)}
+                          </span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {!loading && !error && admins.length === 0 && (
+                  <p className="rounded-xl border border-dashed border-slate-300 px-4 py-6 text-center text-sm text-slate-500">
+                    No admins are available right now.
+                  </p>
+                )}
+              </div>
+
+
+              <div className="flex items-center justify-end gap-3 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowConnectModal(false)}
+                  className="rounded-full border border-slate-900/15 px-5 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleConnect}
+                  type="button"
+                  disabled={!selectedAdminId || loading || connecting}
+                  className={`${goldButton} px-6! py-2.5!`}
+                >
+                  {connecting ? "Connecting..." : "Connect"}
+                </button>
+              </div>
+              {connectionMessage && (
+                <p
+                  className={`text-center text-sm ${
+                    connectionMessage.includes("successfully")
+                      ? "text-emerald-700"
+                      : "text-red-600"
+                  }`}
+                >
+                  {connectionMessage}
+                </p>
+              )}
+            </motion.div>
+          </div>
   );
 }
 

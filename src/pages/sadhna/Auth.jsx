@@ -49,10 +49,13 @@ export default function Auth() {
           name: data.user.name,
           email: data.user.email,
           role: data.user.role,
-          adminId: data.user.adminId,
+          id: data.user.id,
         }),
       );
       window.dispatchEvent(new Event("auth-change"));
+      if(data.user.role === "admin") {
+        navigate("/admin/dashboard", { replace: true });
+      }else
       navigate("/sadhna", { replace: true });
     } catch (submitError) {
       console.error("Login error:", submitError);

@@ -1,10 +1,9 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
-import { Routes, Route, useLocation, Link } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { lazy, Suspense } from 'react'
+import { Routes, Route, useLocation } from 'react-router-dom'
+import { AnimatePresence } from 'framer-motion'
 import Navbar from './assets/components/Navbar.jsx'
 import Footer from './assets/components/Footer.jsx'
 import PageTransition from './assets/components/PageTransition.jsx'
-import { getEventBySlug } from './data/events.js'
 
 const Home = lazy(() => import('./pages/Home/Home.jsx'))
 const Prabhupada = lazy(() => import('./pages/Prabhupada/Prabhupada.jsx'))
@@ -28,6 +27,8 @@ const TransactionFailed = lazy(() => import('./pages/TransactionFailed.jsx'))
 const LegalPage = lazy(() => import('./pages/Legal/LegalPage.jsx'))
 const Sadhna = lazy(() => import('./pages/sadhna/Sadhna.jsx'))
 const Login = lazy(() => import('./pages/sadhna/Auth.jsx'))
+const AdminRegister = lazy(() => import('./pages/sadhna/AdminRegister.jsx'))
+const AdminDashboard = lazy(() => import('./pages/sadhna/AdminDashboard.jsx'))
 
 function PageLoader() {
   return <div className="flex min-h-[40vh] items-center justify-center text-sm text-stone-500">Loading...</div>
@@ -36,26 +37,6 @@ function PageLoader() {
 function App() {
   const location = useLocation()
   const isLmsRoute = location.pathname.startsWith('/lms')
-  const [showEventPopup, setShowEventPopup] = useState(false)
-  const event = getEventBySlug('alumni-camp-jagannath-puri-2026')
-
-  useEffect(() => {
-    const hasSeenPopup = sessionStorage.getItem('iyf-event-popup-seen')
-    if (!hasSeenPopup && event) {
-      const popupTimer = window.setTimeout(() => {
-        setShowEventPopup(true)
-      }, 2000)
-
-      return () => window.clearTimeout(popupTimer)
-    }
-
-    return undefined
-  }, [event])
-
-  const closePopup = () => {
-    setShowEventPopup(false)
-    sessionStorage.setItem('iyf-event-popup-seen', 'true')
-  }
 
   return (
     <>
@@ -85,81 +66,20 @@ function App() {
               <Route path="*" element={<PageTransition><PageNotFound /></PageTransition>} />
               <Route path="/sadhna" element={<PageTransition><Sadhna /></PageTransition>} />
               <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
+              <Route path="/admin/dashboard" element={<PageTransition><AdminDashboard /></PageTransition>} />
+
               <Route
-  path="/store/thank-you"
-  element={<StoreThankYou />}
-/>
-      <Route path="/payment_error" element={<PageTransition><TransactionFailed /></PageTransition>} />
-      <Route path="/legal/:policy" element={<PageTransition><LegalPage /></PageTransition>} />
+                path="/store/thank-you"
+                element={<StoreThankYou />} />
+
+              <Route path="/admin/register" element={<PageTransition><AdminRegister /></PageTransition>} />
+
+              <Route path="/payment_error" element={<PageTransition><TransactionFailed /></PageTransition>} />
+              <Route path="/legal/:policy" element={<PageTransition><LegalPage /></PageTransition>} />
             </Routes>
           </Suspense>
         </AnimatePresence>
       </main>
-
-      <AnimatePresence>
-        {showEventPopup && event && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="event-popup fixed inset-0 z-50 flex items-center justify-center bg-[#0a1714]/65 p-4 backdrop-blur-sm"
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 18, scale: 0.93, rotateX: -8 }}
-              animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-              exit={{ opacity: 0, y: 16, scale: 0.97 }}
-              transition={{ type: 'spring', stiffness: 180, damping: 20, mass: 0.9 }}
-              className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-[#e9dfcd] bg-white shadow-[0_30px_90px_rgba(19,29,23,0.28)]"
-            >
-              <button
-                type="button"
-                onClick={closePopup}
-                className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/85 text-lg font-bold text-[#1f3b2d] shadow-sm transition hover:scale-105"
-                aria-label="Close event announcement"
-              >
-                ×
-              </button>
-
-              <img src={event.image} alt={event.title} className="h-56 w-full object-cover" />
-
-              <div className="space-y-4 p-5 sm:p-6">
-                <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-[#b66d24]">
-                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_14px_rgba(16,185,129,0.95)]" />
-                  Upcoming event
-                </div>
-
-                <div>
-                  <h3 className="text-2xl font-black leading-snug text-[#1f2a25]">{event.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-stone-600">{event.summary}</p>
-                </div>
-
-                <div className="flex items-center justify-between gap-3 rounded-2xl bg-[#f7f1e6] px-3 py-2 text-sm text-[#563d22]">
-                  <span>{event.date}</span>
-                  <span>{event.location}</span>
-                </div>
-
-                <div className="flex gap-3 pt-1">
-                  <button
-                    type="button"
-                    onClick={closePopup}
-                    className="flex-1 rounded-xl border border-[#dcc9ad] bg-white px-4 py-3 font-semibold text-[#2e2a27] transition hover:bg-[#f9f3eb]"
-                  >
-                    Later
-                  </button>
-                  <Link
-                    to={`/events/${event.slug}`}
-                    onClick={closePopup}
-                    className="flex-1 rounded-xl bg-[#276244] px-4 py-3 text-center font-bold text-white shadow-lg shadow-[#276244]/20 transition hover:bg-[#1d5037]"
-                  >
-                    Register now
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {!isLmsRoute && <Footer />}
     </>
