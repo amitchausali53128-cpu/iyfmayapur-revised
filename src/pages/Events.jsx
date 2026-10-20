@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FiArrowRight, FiCalendar, FiMapPin } from 'react-icons/fi'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { events } from '../data/events.js'
 
 const campStartTime = new Date('2026-10-16T00:00:00+05:30').getTime()

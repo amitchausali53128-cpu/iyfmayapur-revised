@@ -6,7 +6,7 @@ const bgimage = cloudinaryAsset("assets/sample.jpg");
 import { Link } from "react-router-dom";
 import { getCourses } from "../utils/lmsState";
 import FadeUp from "../utils/motions/FadeUp";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 export default function StudentCourses() {
   const [courses, setCourses] = useState([]);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { CourseCard } from "../components/Card";
 import { Link } from "react-router-dom";
 import { getCourses } from "../utils/lmsState";

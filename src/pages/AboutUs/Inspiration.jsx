@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { cloudinaryAsset } from "../../lib/cloudinary";
 
 const image2 = cloudinaryAsset("jps.png");

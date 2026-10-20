@@ -34,6 +34,11 @@
 }
 
 @media (hover: none), (pointer: coarse) {
+  .infinite-gallery-column {
+    animation-play-state: paused;
+    will-change: auto;
+  }
+
   .home-button:hover,
   .home-hero__arrow:hover,
   .home-pathway-card:hover,
