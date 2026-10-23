@@ -416,6 +416,14 @@ export default function Donation(){
             <button type="submit" disabled={loading} className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-[#08745e] px-6 py-4 text-sm font-bold text-white shadow-xl/30 transition hover:bg-[#05634f] disabled:opacity-60">
               <FiLock/>{loading?"Connecting securely…":`Proceed to pay ₹${Number(form.amount||0).toLocaleString("en-IN")}`}{!loading&&<FiArrowRight/>}
             </button>
+            <div className="mt-3 flex items-start gap-2 rounded-xl border border-[#ead9ad] bg-[#fff9e9] p-3.5">
+  <FiShield className="mt-0.5 shrink-0 text-[#a77920]" />
+  <p className="text-xs leading-5 text-[#6d572c]">
+    <strong>Eligibility Notice:</strong> Donations through this page
+    are accepted only from Indian citizens holding an Indian passport.
+    International donors cannot donate through this page.
+  </p>
+</div>
 
             <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-[#7b8781]"><FiShield className="text-[#08745e]"/> Secure one-time payment</div>
             <p className="mt-1 text-center text-[10px] leading-5 text-[#929b96]">You’ll continue to Mayapur Treasury’s secure payment page. This is a one-time donation and will not recur.</p>
