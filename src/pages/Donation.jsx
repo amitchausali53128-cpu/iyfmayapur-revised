@@ -80,12 +80,42 @@ function Heading({eyebrow,children,description}){
   </motion.div>
 }
 
-function Field({label,name,value,onChange,required=false,type="text",full=false}){
-  const Icon=fieldIcons[name]||FiHeart;
-  return <label className={full?"block sm:col-span-2":"block"}>
-    <span className="mb-2 flex items-center gap-2 text-xs font-semibold text-[#43524c]"><Icon className="text-[#08745e]"/>{label}</span>
-    <input required={required} type={type} name={name} value={value} onChange={onChange} inputMode={name==="mobile"?"numeric":undefined} className={inputStyles}/>
-  </label>
+function Field({
+  label,
+  name,
+  value,
+  onChange,
+  required = false,
+  type = "text",
+  full = false
+}) {
+  const Icon = fieldIcons[name] || FiHeart;
+
+  return (
+    <label className={full ? "block sm:col-span-2" : "block"}>
+      <span className="mb-2 flex items-center gap-2 text-xs font-semibold text-[#43524c]">
+        <Icon className="text-[#08745e]" />
+        {label}
+      </span>
+
+      <input
+        required={required}
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        inputMode={name === "mobile" ? "numeric" : undefined}
+        maxLength={name === "mobile" ? 10 : undefined}
+        pattern={name === "mobile" ? "[0-9]{10}" : undefined}
+        title={
+          name === "mobile"
+            ? "Please enter exactly 10 digits."
+            : undefined
+        }
+        className={inputStyles}
+      />
+    </label>
+  );
 }
 
 export default function Donation(){
@@ -124,10 +154,26 @@ export default function Donation(){
       .catch(err=>setError(err.message));
   },[]);
 
-  const updateField=e=>setForm(current=>({...current,[e.target.name]:e.target.value}));
+  const updateField = (e) => {
+  const { name } = e.target;
+  let { value } = e.target;
+
+  if (name === "mobile") {
+    value = value.replace(/\D/g, "").slice(0, 10);
+  }
+
+  setForm((current) => ({
+    ...current,
+    [name]: value,
+  }));
+};
 
   const beginPayment=async e=>{
     e.preventDefault();
+    if (!/^[0-9]{10}$/.test(form.mobile)) {
+    setError("Please enter a valid 10-digit mobile number.");
+    return;
+  }
     setLoading(true);
     setError("");
 
@@ -346,10 +392,17 @@ export default function Donation(){
                 <Field label="Middle name" name="middle_name" value={form.middle_name} onChange={updateField}/>
                 <Field label="Last name *" name="last_name" required value={form.last_name} onChange={updateField}/>
                 <Field label="Email *" name="email" type="email" required value={form.email} onChange={updateField}/>
-                <Field label="Mobile *" name="mobile" required value={form.mobile} onChange={updateField}/>
+                <Field
+  label="Mobile (10 digits) *"
+  name="mobile"
+  type="tel"
+  required
+  value={form.mobile}
+  onChange={updateField}
+/>
                 <Field label="PAN card (required for 80G)" name="pan_card" value={form.pan_card} onChange={updateField}/>
                 <Field label="Address line 1 *" name="address_1" required full value={form.address_1} onChange={updateField}/>
-                <Field label="Address line 2" name="address_2" full value={form.address_2} onChange={updateField}/>
+                <Field label="Address line 2 *" name="address_2" required full value={form.address_2} onChange={updateField}/>
                 <Field label="PIN / postal code *" name="pin_code" required value={form.pin_code} onChange={updateField}/>
                 <Field label="District *" name="district" required value={form.district} onChange={updateField}/>
                 <Field label="City *" name="city" required value={form.city} onChange={updateField}/>
