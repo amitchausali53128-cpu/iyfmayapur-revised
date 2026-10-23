@@ -9,7 +9,6 @@ const MENU_ITEMS = [
   { name: "Events", path: "/events" },
   { name: "Courses", path: "/lms" },
   { name: "Gallery", path: "/gallery" },
-  { name: "Store", path: "/store" },
   { name: "Donation", path: "/donation" },
   { name: "AboutUs", path: "/aboutUs" },
   // { name: "Srila Prabhupada", path: "/prabhupada" },

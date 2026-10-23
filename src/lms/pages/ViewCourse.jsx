@@ -318,142 +318,20 @@ export default function ViewCourse() {
         return;
       }
 
-      const amount = parseCourseAmount(course.price);
-
-      /*
-       * Free course.
-       */
-      if (amount === 0) {
-        await enrollInCourse(course._id);
-        navigate(`/player/${course._id}`);
-        return;
-      }
-
-      const decoded = jwtDecode(token);
-      const userId = decoded.id;
-
-      const student = await getStudentById(userId);
-
-      const nameParts = String(student?.name || "")
-        .trim()
-        .split(/\s+/)
-        .filter(Boolean);
-
-      const firstName =
-        student?.first_name ||
-        nameParts.shift() ||
-        "Student";
-
-      const lastName =
-        student?.last_name ||
-        nameParts.join(" ") ||
-        firstName;
-
-      const paymentPayload = {
-        payment_type: "lms",
-
-        amount: Number((amount / 100).toFixed(2)),
-
-        email: student?.email || "",
-
-        mobile:
-          student?.mobile ||
-          student?.phone ||
-          "0000000000",
-
-        first_name: firstName,
-        last_name: lastName,
-
-        address_1:
-          student?.address_1 ||
-          "Online purchase",
-
-        address_2: student?.address_2 || "",
-
-        post_office:
-          student?.post_office || "",
-
-        pin_code:
-          student?.pin_code ||
-          "000000",
-
-        district:
-          student?.district ||
-          "Online",
-
-        city:
-          student?.city ||
-          "Online",
-
-        state:
-          student?.state ||
-          "India",
-
-        country:
-          student?.country ||
-          "India",
-
-        /*
-         * IMPORTANT:
-         * This identifies the payment as an LMS payment.
-         */
-        course_id: String(course._id),
-        user_id: String(student._id),
-        transaction_purpose:
-          `LMS Course Enrollment (course_id:${course._id})`,
-      };
-
       setCheckoutLoading(true);
+     await enrollInCourse(course._id);
+        navigate(`/lms/player/${course._id}`);
 
-      /*
-       * IMPORTANT:
-       * Call the LMS Treasury endpoint directly.
-       *
-       * This prevents the course payment from accidentally
-       * going through the normal donation/payment endpoint.
-       */
-
-      alert("Checkout not implemented.")
-      return;
-      const response = await fetch(
-        // 
-        // {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify(paymentPayload),
-        // }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data?.error ||
-            "Unable to start Treasury checkout."
-        );
-      }
-
-      if (!data?.payment_url) {
-        throw new Error(
-          "Treasury checkout URL was not returned."
-        );
-      }
-
-      /*
-       * Send the user to HDFC Treasury.
-       */
-      window.location.assign(data.payment_url);
+      
     } catch (err) {
       console.error(
-        "Error starting course payment:",
+        "Error enrolling in course:",
         err
       );
 
       alert(
         err.message ||
-          "Unable to start checkout."
+          "Unable to enroll."
       );
 
       setCheckoutLoading(false);
@@ -640,12 +518,12 @@ export default function ViewCourse() {
             </button>
           ) : (
             <button
-              onClick={()=>{alert("Checkout not implemented.")}}
+              onClick={handleEnrollment}
               disabled={checkoutLoading}
               className="w-full bg-[#f59e0b] hover:bg-[#d97706] text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all duration-200 transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {checkoutLoading
-                ? "Opening Checkout..."
+                ? "Enrolling..."
                 : "Enroll Now"}
             </button>
           )}

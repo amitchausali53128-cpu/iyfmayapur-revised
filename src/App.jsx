@@ -6,7 +6,7 @@ import Footer from './assets/components/Footer.jsx'
 import PageTransition from './assets/components/PageTransition.jsx'
 
 const Home = lazy(() => import('./pages/Home/Home.jsx'))
-const Prabhupada = lazy(() => import('./pages/Prabhupada/Prabhupada.jsx'))
+
 const AboutUs = lazy(() => import('./pages/AboutUs/About.jsx'))
 const StudentCourses = lazy(() => import('./pages/StudentCourses.jsx'))
 const Player = lazy(() => import('./pages/Player.jsx'))
@@ -16,8 +16,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard.jsx'))
 const Gallery = lazy(() => import('./pages/Gallery.jsx'))
 const EventDetails = lazy(() => import('./pages/EventDetails.jsx'))
 const Events = lazy(() => import('./pages/Events.jsx'))
-const Seva = lazy(() => import('./pages/Seva.jsx'))
-const Store = lazy(() => import('./pages/store/Store.jsx'))
+
 const Courses = lazy(() => import('./pages/Courses.jsx'))
 const LmsApp = lazy(() => import('./lms/LmsApp.jsx'))
 const Donation = lazy(() => import('./pages/Donation.jsx'))
@@ -47,12 +46,12 @@ function App() {
           <Suspense fallback={<PageLoader />}>
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<PageTransition><Home /></PageTransition>} />
-              {/* <Route path="/prabhupada" element={<PageTransition><Prabhupada /></PageTransition>} /> */}
+             
               <Route path="/aboutUs" element={<PageTransition><AboutUs /></PageTransition>} />
               <Route path="/events" element={<PageTransition><Events /></PageTransition>} />
               <Route path="/events/:eventSlug" element={<PageTransition><EventDetails /></PageTransition>} />
-              {/* <Route path="/seva" element={<PageTransition><Seva /></PageTransition>} /> */}
-              <Route path="/store" element={<PageTransition><Store /></PageTransition>} />
+              
+              
               <Route path="/donation" element={<PageTransition><Donation /></PageTransition>} />
               <Route path="/courses" element={<PageTransition><Courses /></PageTransition>} />
               <Route path="/lms/*" element={<LmsApp />} />
