@@ -51,8 +51,22 @@ function readJson(request) {
 
 function encryptionKey() {
   const key = process.env.MAYAPUR_PAYMENT_AUTH_KEY;
-  if (!key || Buffer.byteLength(key) !== 32) throw new Error("MAYAPUR_PAYMENT_AUTH_KEY must be the 32-character Treasury key");
-  return Buffer.from(key, "utf8");
+
+  if (!key) {
+    throw new Error("MAYAPUR_PAYMENT_AUTH_KEY not defined");
+  }
+
+  const keyBuffer = Buffer.from(key, "utf8");
+
+  // Match PHP OpenSSL's key-length handling for AES-256.
+  if (keyBuffer.length >= 32) {
+    return keyBuffer.subarray(0, 32);
+  }
+
+  return Buffer.concat([
+    keyBuffer,
+    Buffer.alloc(32 - keyBuffer.length),
+  ]);
 }
 
 function encryptPayload(payload) {

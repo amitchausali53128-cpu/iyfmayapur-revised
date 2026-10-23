@@ -15,13 +15,17 @@ export const DEPARTMENT_CODE = "IYF";
 function key() {
   const value = process.env.MAYAPUR_PAYMENT_AUTH_KEY;
 
-  if (!value || Buffer.byteLength(value, "utf8") !== 32) {
+  if (!value) {
     throw new Error(
       "MAYAPUR_PAYMENT_AUTH_KEY is not configured correctly"
     );
   }
 
-  return Buffer.from(value, "utf8");
+  const keyBuffer = Buffer.from(value, "utf8");
+
+  // AES-256 requires exactly 32 bytes.
+  // Match OpenSSL's handling of an overlong raw key.
+  return keyBuffer.subarray(0, 32);
 }
 
 /**
