@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 
 import TempImg from "../../assets/Temple.webp";
+import { Link } from "react-router-dom";
 
 const decorations = [
   {
@@ -369,42 +370,32 @@ const AboutHero = () => {
               </span>
             </motion.div>
 
-            <motion.button
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                delay: 1.5,
-                duration: 0.7,
-              }}
-              whileHover={{
-                scale: 1.06,
-                boxShadow: "0 10px 35px rgba(245,158,11,0.35)",
-              }}
-              whileTap={{
-                scale: 0.96,
-              }}
-              className="mt-6 rounded-full bg-[#f59e0b] px-5 py-2.5 text-xs font-semibold tracking-wider text-green-950 transition sm:mt-10 sm:px-6 sm:py-3"
-            >
-              Join the Movement
-              <motion.span
-                animate={{
-                  x: [0, 5, 0],
-                }}
-                transition={{
-                  duration: 1.2,
-                  repeat: Infinity,
-                }}
-                className="ml-2 inline-block"
-              >
-                →
-              </motion.span>
-            </motion.button>
+            
+<Link to="/free-class" className="inline-block">
+  <motion.button
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 1.5, duration: 0.7 }}
+    whileHover={{
+      scale: 1.06,
+      boxShadow: "0 10px 35px rgba(245,158,11,0.35)",
+    }}
+    whileTap={{ scale: 0.96 }}
+    className="mt-6 rounded-full bg-[#f59e0b] px-5 py-2.5
+      font-bold tracking-wider text-green-950
+      transition sm:mt-10 sm:px-6 sm:py-3"
+  >
+    Join the Free-Class
+    <motion.span
+      animate={{ x: [0, 5, 0] }}
+      transition={{ duration: 1.2, repeat: Infinity }}
+      className="ml-2 inline-block"
+    >
+      →
+    </motion.span>
+  </motion.button>
+</Link>
+
           </div>
         </div>
       </motion.div>

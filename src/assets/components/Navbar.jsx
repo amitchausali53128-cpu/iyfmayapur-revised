@@ -11,6 +11,7 @@ const MENU_ITEMS = [
   { name: "Gallery", path: "/gallery" },
   { name: "Donation", path: "/donation" },
   { name: "AboutUs", path: "/aboutUs" },
+  { name: "Everyday", path: "/free-class" },
   // { name: "Srila Prabhupada", path: "/prabhupada" },
 ];
 

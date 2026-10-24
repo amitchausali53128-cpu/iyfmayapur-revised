@@ -29,6 +29,8 @@ const Login = lazy(() => import('./pages/sadhna/Auth.jsx'))
 const AdminRegister = lazy(() => import('./pages/sadhna/AdminRegister.jsx'))
 const AdminDashboard = lazy(() => import('./pages/sadhna/AdminDashboard.jsx'))
 
+const FreeClass = lazy(() => import('./pages/Free.jsx'))
+
 function PageLoader() {
   return <div className="flex min-h-[40vh] items-center justify-center text-sm text-stone-500">Loading...</div>
 }
@@ -72,7 +74,7 @@ function App() {
                 element={<StoreThankYou />} />
 
               <Route path="/admin/register" element={<PageTransition><AdminRegister /></PageTransition>} />
-
+              <Route path="/free-class" element={<PageTransition><FreeClass /></PageTransition>} />
               <Route path="/payment_error" element={<PageTransition><TransactionFailed /></PageTransition>} />
               <Route path="/legal/:policy" element={<PageTransition><LegalPage /></PageTransition>} />
             </Routes>
